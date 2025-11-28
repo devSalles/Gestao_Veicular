@@ -1,7 +1,9 @@
 package Gestao_Transporte.dto.veiculo;
 
 import Gestao_Transporte.Enum.StatusVeiculo;
+import Gestao_Transporte.dto.motorista.MotoristaResponseDTO;
 import Gestao_Transporte.entity.Veiculo;
+import java.util.List;
 
 public record VeiculoResponseDTO(
         Long id,
@@ -9,10 +11,12 @@ public record VeiculoResponseDTO(
         String marca,
         String modelo,
         Integer ano,
-        StatusVeiculo statusVeiculo
+        StatusVeiculo statusVeiculo,
+        List<MotoristaResponseDTO> motorista
 ) {
-    public VeiculoResponseDTO fromVeiculo(Veiculo veiculo)
+    public static VeiculoResponseDTO fromVeiculo(Veiculo veiculo)
     {
-        return new VeiculoResponseDTO(veiculo.getId(), veiculo.getPlaca(), veiculo.getMarca(), veiculo.getModelo(), veiculo.getAno(), veiculo.getStatus());
+        return new VeiculoResponseDTO(veiculo.getId(), veiculo.getPlaca(), veiculo.getMarca(), veiculo.getModelo(), veiculo.getAno(), veiculo.getStatus(),
+        MotoristaResponseDTO.fromMotoristaConversao(veiculo.getMotoristas()));
     }
 }

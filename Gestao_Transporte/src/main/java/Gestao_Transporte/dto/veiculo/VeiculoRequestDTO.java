@@ -1,10 +1,7 @@
 package Gestao_Transporte.dto.veiculo;
 
-import Gestao_Transporte.Enum.StatusVeiculo;
 import Gestao_Transporte.entity.Motorista;
 import Gestao_Transporte.entity.Veiculo;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -23,6 +20,7 @@ import java.util.HashSet;
 public class VeiculoRequestDTO {
 
     @NotNull(message = "Placa do veículo obrigatória") @NotBlank(message = "Placa do veículo obrigatória")
+//    @Pattern(regexp = "([A-Z]{3}[0-9]{4} | A-Z]{3}[0-9][A-Z][0-9]{2})",message = " formato de placa inválido") //placa salva sem formatação (modelo Mercosul e modelo antigo)
     private String placa; //salvo sem formatação
 
     @NotNull(message = "Marca do veículo obrigatória") @NotBlank(message = "Marca do veículo obrigatória")
@@ -34,10 +32,6 @@ public class VeiculoRequestDTO {
     @NotNull(message = "Ano do veículo obrigatório") @Positive(message = "Ano não pode ser negativo e tem que ser maior que 0")
     private Integer ano;
 
-    @NotNull(message = "Status do veículo obrigatório") @Enumerated(EnumType.STRING)
-    @Pattern(regexp = "([A-Z]{3}[0-9]{4} | A-Z]{3}[0-9][A-Z][0-9]{2})") //placa salva sem formatação (modelo Mercosul e modelo antigo)
-    private StatusVeiculo statusVeiculo;
-
     public Veiculo toVeiculo(Motorista motorista)
     {
         Veiculo veiculo = new Veiculo();
@@ -46,7 +40,6 @@ public class VeiculoRequestDTO {
         veiculo.setMarca(this.marca);
         veiculo.setModelo(this.modelo);
         veiculo.setAno(this.ano);
-        veiculo.setStatus(this.statusVeiculo);
 
         if(veiculo.getMotoristas() == null)
         {
@@ -54,6 +47,18 @@ public class VeiculoRequestDTO {
         }
 
         veiculo.getMotoristas().add(motorista);
+
+        return veiculo;
+    }
+
+    public Veiculo Veiculo()
+    {
+        Veiculo veiculo = new Veiculo();
+
+        veiculo.setPlaca(this.placa);
+        veiculo.setMarca(this.marca);
+        veiculo.setModelo(this.modelo);
+        veiculo.setAno(this.ano);
 
         return veiculo;
     }
