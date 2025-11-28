@@ -10,6 +10,7 @@ import Gestao_Transporte.entity.Motorista;
 import Gestao_Transporte.entity.Veiculo;
 import Gestao_Transporte.repository.MotoristaRepository;
 import Gestao_Transporte.repository.VeiculoRespoitory;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -21,6 +22,7 @@ public class VeiculoService {
     private final VeiculoRespoitory veiculoRespoitory;
     private final MotoristaRepository motoristaRepository;
 
+    @Transactional
     public Veiculo salvarVeiculo(VeiculoRequestDTO veiculoRequestDTO)
     {
         if(veiculoRespoitory.existsByPlaca(veiculoRequestDTO.getPlaca()))
@@ -35,6 +37,7 @@ public class VeiculoService {
         return this.veiculoRespoitory.save(veiculoNew);
     }
 
+    @Transactional
     public VeiculoResponseDTO vincularVeiculo(VeiculoRequestDTO veiculoRequestDTO, Long id)
     {
         if(veiculoRespoitory.existsByPlaca(veiculoRequestDTO.getPlaca()))
@@ -56,6 +59,7 @@ public class VeiculoService {
         return VeiculoResponseDTO.fromVeiculo(veiculoSalvar);
     }
 
+    @Transactional
     public Veiculo atualizarVeiculo(Long id , VeiculoUpdateDTO veiculoUpdateDTO)
     {
         Veiculo veiculo = this.veiculoRespoitory.findById(id).orElseThrow(IdNaoEncontradoException::new);
@@ -103,6 +107,37 @@ public class VeiculoService {
         }
 
         return veiculo.stream().map(VeiculoResponseStatusDTO::fromVeiculo).toList();
+    }
+
+    public Veiculo colocarEmManutencao(Long id)
+    {
+        Veiculo veiculo = this.veiculoRespoitory.findById(id).orElseThrow(() -> new IdNaoEncontradoException("ID de veículo não encontrado"));
+
+        if(veiculo.getStatus() == StatusVeiculo.EM_VIAGEM)
+        {
+            throw new VeiculoEmViagemException();
+        }
+
+        if(veiculo.getStatus() == StatusVeiculo.MANUTENCAO)
+        {
+            throw new EmManutencaoException();
+        }
+
+        veiculo.setStatus(StatusVeiculo.MANUTENCAO);
+        return this.veiculoRespoitory.save(veiculo);
+    }
+
+    public Veiculo retiradaManutencao(Long id)
+    {
+        Veiculo veiculo = this.veiculoRespoitory.findById(id).orElseThrow(() -> new IdNaoEncontradoException("ID de veículo não encontrado"));
+
+        if(veiculo.getStatus() != StatusVeiculo.MANUTENCAO)
+        {
+            throw new EmManutencaoException();
+        }
+
+        veiculo.setStatus(StatusVeiculo.DISPONIVEL);
+        return this.veiculoRespoitory.save(veiculo);
     }
 
     //Função de formatação de formato de placa(remove espaços e caracteres especiais)

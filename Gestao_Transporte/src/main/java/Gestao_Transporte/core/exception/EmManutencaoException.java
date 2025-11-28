@@ -5,6 +5,6 @@ public class EmManutencaoException extends RuntimeException {
         super(message);
     }
     public EmManutencaoException() {
-        super("O veículo já está em manutenção");
+        super("O veículo não está em manutenção");
     }
 }

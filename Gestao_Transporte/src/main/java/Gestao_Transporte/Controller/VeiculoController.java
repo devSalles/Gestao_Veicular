@@ -35,6 +35,18 @@ public class VeiculoController {
         return ResponseEntity.ok(this.veiculoService.atualizarVeiculo(id,veiculoUpdateDTO));
     }
 
+    @PatchMapping("/colocar-em-manutencao/{id}")
+    public ResponseEntity<?> colocarManutencao(@PathVariable Long id)
+    {
+        return ResponseEntity.ok(this.veiculoService.colocarEmManutencao(id));
+    }
+
+    @PatchMapping("/retirar-da-manutencao/{id}")
+    public ResponseEntity<?> retiradaManutencao(@PathVariable Long id)
+    {
+        return ResponseEntity.ok(this.veiculoService.retiradaManutencao(id));
+    }
+
     @GetMapping("/mostar-todos")
     public ResponseEntity<?> exibirTodos()
     {
