@@ -80,4 +80,18 @@ public class HandlerException {
         MessageRestError messageRestError = new MessageRestError(HttpStatus.CONFLICT, ex.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(messageRestError);
     }
+
+    @ExceptionHandler(VeiculoIndisponivelException.class)
+    public ResponseEntity<MessageRestError> VeiculoIndisponivelException(VeiculoIndisponivelException ex)
+    {
+        MessageRestError messageRestError = new MessageRestError(HttpStatus.BAD_REQUEST,ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageRestError);
+    }
+
+    @ExceptionHandler(VeiculoDisponivelException.class)
+    public ResponseEntity<MessageRestError> VeiculoDisponivelException(VeiculoDisponivelException ex)
+    {
+        MessageRestError messageRestError = new MessageRestError(HttpStatus.BAD_REQUEST,ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageRestError);
+    }
 }
