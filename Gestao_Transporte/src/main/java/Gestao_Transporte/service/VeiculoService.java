@@ -30,33 +30,11 @@ public class VeiculoService {
             throw new PlacaDuplicadaException();
         }
 
-        Veiculo veiculoNew = veiculoRequestDTO.Veiculo();
+        Veiculo veiculoNew = veiculoRequestDTO.novoVeiculo();
         veiculoNew.setPlaca(limparPlaca(veiculoRequestDTO.getPlaca()));
         veiculoNew.setStatus(StatusVeiculo.DISPONIVEL);
 
         return this.veiculoRespoitory.save(veiculoNew);
-    }
-
-    @Transactional
-    public VeiculoResponseDTO vincularVeiculo(VeiculoRequestDTO veiculoRequestDTO, Long id)
-    {
-        if(veiculoRespoitory.existsByPlaca(veiculoRequestDTO.getPlaca()))
-        {
-            throw new PlacaDuplicadaException();
-        }
-
-        Motorista motoristaSalvar = this.motoristaRepository.findById(id).orElseThrow(IdNaoEncontradoException::new);
-
-        Veiculo veiculoSalvar = veiculoRequestDTO.toVeiculo(motoristaSalvar);
-
-        veiculoSalvar.setStatus(StatusVeiculo.DISPONIVEL);
-        veiculoSalvar.setPlaca(limparPlaca(veiculoRequestDTO.getPlaca()));
-
-        motoristaSalvar.getVeiculos().add(veiculoSalvar);
-
-        this.veiculoRespoitory.save(veiculoSalvar);
-
-        return VeiculoResponseDTO.fromVeiculo(veiculoSalvar);
     }
 
     @Transactional
@@ -71,6 +49,20 @@ public class VeiculoService {
 
         veiculoUpdateDTO.updateVeiculo(veiculo);
         return this.veiculoRespoitory.save(veiculo);
+    }
+
+    //Metodo para vincular motorista a um veiculo
+    @Transactional
+    public VeiculoResponseDTO vincularVeiculo(Long idVeiculo, Long idMotorista)
+    {
+        Motorista motoristaVincular = this.motoristaRepository.findById(idMotorista).orElseThrow(()->new  IdNaoEncontradoException("ID de motorista não encontrado"));
+        Veiculo veiculoVinc = this.veiculoRespoitory.findById(idVeiculo).orElseThrow(()->new  IdNaoEncontradoException("ID de veiculo não encontrado"));
+
+        motoristaVincular.getVeiculos().add(veiculoVinc);
+        veiculoVinc.getMotoristas().add(motoristaVincular);
+
+        this.veiculoRespoitory.save(veiculoVinc);
+        return VeiculoResponseDTO.fromVeiculo(veiculoVinc);
     }
 
     public List<VeiculoResponseDTO> mostrarTodos()
@@ -109,6 +101,7 @@ public class VeiculoService {
         return veiculo.stream().map(VeiculoResponseStatusDTO::fromVeiculo).toList();
     }
 
+    //metodo para colocar o veículo em manutenção
     public Veiculo colocarEmManutencao(Long id)
     {
         Veiculo veiculo = this.veiculoRespoitory.findById(id).orElseThrow(() -> new IdNaoEncontradoException("ID de veículo não encontrado"));
@@ -120,7 +113,7 @@ public class VeiculoService {
 
         if(veiculo.getStatus() == StatusVeiculo.MANUTENCAO)
         {
-            throw new EmManutencaoException();
+            throw new EmManutencaoException("O veículo já está em manutenção");
         }
 
         veiculo.setStatus(StatusVeiculo.MANUTENCAO);
@@ -134,6 +127,37 @@ public class VeiculoService {
         if(veiculo.getStatus() != StatusVeiculo.MANUTENCAO)
         {
             throw new EmManutencaoException();
+        }
+
+        veiculo.setStatus(StatusVeiculo.DISPONIVEL);
+        return this.veiculoRespoitory.save(veiculo);
+    }
+
+    public Veiculo iniciarViagem(Long idVeiculo)
+    {
+        Veiculo veiculo = this.veiculoRespoitory.findById(idVeiculo).orElseThrow(() -> new IdNaoEncontradoException("ID de veículo não encontrado"));
+
+        if(veiculo.getStatus()==StatusVeiculo.EM_VIAGEM)
+        {
+            throw new VeiculoEmViagemException("O veículo já está em viagem");
+        }
+
+        if(veiculo.getStatus() != StatusVeiculo.DISPONIVEL)
+        {
+            throw new VeiculoIndisponivelException();
+        }
+
+        veiculo.setStatus(StatusVeiculo.EM_VIAGEM);
+        return this.veiculoRespoitory.save(veiculo);
+    }
+
+    public Veiculo finalizarViagem(Long id)
+    {
+        Veiculo veiculo = this.veiculoRespoitory.findById(id).orElseThrow(() -> new IdNaoEncontradoException("ID de veículo não encontrado"));
+
+        if(veiculo.getStatus()==StatusVeiculo.DISPONIVEL)
+        {
+            throw new VeiculoDisponivelException();
         }
 
         veiculo.setStatus(StatusVeiculo.DISPONIVEL);

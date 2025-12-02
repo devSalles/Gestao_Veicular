@@ -32,26 +32,7 @@ public class VeiculoRequestDTO {
     @NotNull(message = "Ano do veículo obrigatório") @Positive(message = "Ano não pode ser negativo e tem que ser maior que 0")
     private Integer ano;
 
-    public Veiculo toVeiculo(Motorista motorista)
-    {
-        Veiculo veiculo = new Veiculo();
-
-        veiculo.setPlaca(this.placa);
-        veiculo.setMarca(this.marca);
-        veiculo.setModelo(this.modelo);
-        veiculo.setAno(this.ano);
-
-        if(veiculo.getMotoristas() == null)
-        {
-            veiculo.setMotoristas(new HashSet<>());
-        }
-
-        veiculo.getMotoristas().add(motorista);
-
-        return veiculo;
-    }
-
-    public Veiculo Veiculo()
+    public Veiculo novoVeiculo()
     {
         Veiculo veiculo = new Veiculo();
 

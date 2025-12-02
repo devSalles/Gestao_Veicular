@@ -19,16 +19,29 @@ public class VeiculoController {
     private final VeiculoService veiculoService;
 
     @PostMapping("/salvar-veiculo")
-    public ResponseEntity<?> save(@Valid @RequestBody VeiculoRequestDTO veiculoRequestDTO)
+    public ResponseEntity<?> salvar(@Valid @RequestBody VeiculoRequestDTO veiculoRequestDTO)
     {
         return ResponseEntity.ok(this.veiculoService.salvarVeiculo(veiculoRequestDTO));
     }
 
-    @PostMapping("/vincular-veiculo/{id}")
-    public ResponseEntity<?> salvar(@Valid @RequestBody VeiculoRequestDTO veiculoRequestDTO, @PathVariable Long id)
+    @PostMapping("/vincular-veiculo/{idVeiculo}/motorista/{idMotorista}")
+    public ResponseEntity<?> vincularVeiculo(@PathVariable Long idVeiculo,@PathVariable Long idMotorista)
     {
-        return ResponseEntity.ok(this.veiculoService.vincularVeiculo(veiculoRequestDTO,id));
+        return ResponseEntity.ok(this.veiculoService.vincularVeiculo(idVeiculo,idMotorista));
     }
+
+    @PostMapping("/iniciar-viagem/{id}")
+    public ResponseEntity<?> iniciarViagem(@PathVariable Long id)
+    {
+        return ResponseEntity.ok(this.veiculoService.iniciarViagem(id));
+    }
+
+    @PostMapping("/finalizar-viagem/{id}")
+    public ResponseEntity<?> finalizarViagem(@PathVariable Long id)
+    {
+        return ResponseEntity.ok(this.veiculoService.finalizarViagem(id));
+    }
+
     @PutMapping("/atualizar-veiculo/{id}")
     public ResponseEntity<?> atualizar(@PathVariable Long id, @Valid @RequestBody VeiculoUpdateDTO veiculoUpdateDTO)
     {
