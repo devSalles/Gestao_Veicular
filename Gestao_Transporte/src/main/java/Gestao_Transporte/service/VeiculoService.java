@@ -79,9 +79,9 @@ public class VeiculoService {
 
     public Veiculo procurarPorPlaca(String placa)
     {
-        limparPlaca(placa);
+        String placaLimpa = limparPlaca(placa);
 
-        Veiculo veiculo = this.veiculoRespoitory.findByPlaca(placa);
+        Veiculo veiculo = this.veiculoRespoitory.findByPlaca(placaLimpa);
         if (veiculo == null)
         {
             throw new PlacaInexistenteException();
@@ -95,7 +95,7 @@ public class VeiculoService {
 
         if(veiculo.isEmpty())
         {
-            throw new StatusVazioException();
+            throw new NenhumVeiculoComStatusException();
         }
 
         return veiculo.stream().map(VeiculoResponseStatusDTO::fromVeiculo).toList();
@@ -133,9 +133,10 @@ public class VeiculoService {
         return this.veiculoRespoitory.save(veiculo);
     }
 
-    public Veiculo iniciarViagem(Long idVeiculo)
+    public Veiculo iniciarViagem(Long idVeiculo, Long idMotorista)
     {
         Veiculo veiculo = this.veiculoRespoitory.findById(idVeiculo).orElseThrow(() -> new IdNaoEncontradoException("ID de veículo não encontrado"));
+        Motorista motorista = this.motoristaRepository.findById(idMotorista).orElseThrow(() -> new IdNaoEncontradoException("ID de motorista não encontrado"));
 
         if(veiculo.getStatus()==StatusVeiculo.EM_VIAGEM)
         {
@@ -147,11 +148,16 @@ public class VeiculoService {
             throw new VeiculoIndisponivelException();
         }
 
+        if(!motorista.getCategoria().isCompativelCom(veiculo.getTipoVeiculo()))
+        {
+            throw new CnhIncompativelException();
+        }
+
         veiculo.setStatus(StatusVeiculo.EM_VIAGEM);
         return this.veiculoRespoitory.save(veiculo);
     }
 
-    public Veiculo finalizarViagem(Long id)
+    public Veiculo finalizarViagem(Long id,boolean enviarParaManutencao)
     {
         Veiculo veiculo = this.veiculoRespoitory.findById(id).orElseThrow(() -> new IdNaoEncontradoException("ID de veículo não encontrado"));
 
@@ -160,7 +166,15 @@ public class VeiculoService {
             throw new VeiculoDisponivelException();
         }
 
-        veiculo.setStatus(StatusVeiculo.DISPONIVEL);
+        if(enviarParaManutencao)
+        {
+            veiculo.setStatus(StatusVeiculo.MANUTENCAO);
+        }
+        else
+        {
+            veiculo.setStatus(StatusVeiculo.DISPONIVEL);
+        }
+
         return this.veiculoRespoitory.save(veiculo);
     }
 

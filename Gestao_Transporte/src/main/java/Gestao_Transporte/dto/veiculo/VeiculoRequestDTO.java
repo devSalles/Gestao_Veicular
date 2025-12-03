@@ -1,7 +1,10 @@
 package Gestao_Transporte.dto.veiculo;
 
+import Gestao_Transporte.Enum.TipoVeiculo;
 import Gestao_Transporte.entity.Motorista;
 import Gestao_Transporte.entity.Veiculo;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -32,6 +35,9 @@ public class VeiculoRequestDTO {
     @NotNull(message = "Ano do veículo obrigatório") @Positive(message = "Ano não pode ser negativo e tem que ser maior que 0")
     private Integer ano;
 
+    @NotNull(message = "Tipo de veículo obrigatório") @Enumerated(EnumType.STRING)
+    private TipoVeiculo tipoVeiculo;
+
     public Veiculo novoVeiculo()
     {
         Veiculo veiculo = new Veiculo();
@@ -40,6 +46,7 @@ public class VeiculoRequestDTO {
         veiculo.setMarca(this.marca);
         veiculo.setModelo(this.modelo);
         veiculo.setAno(this.ano);
+        veiculo.setTipoVeiculo(this.tipoVeiculo);
 
         return veiculo;
     }
