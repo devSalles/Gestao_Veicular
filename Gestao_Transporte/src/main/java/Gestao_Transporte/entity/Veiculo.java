@@ -1,6 +1,7 @@
 package Gestao_Transporte.entity;
 
 import Gestao_Transporte.Enum.StatusVeiculo;
+import Gestao_Transporte.Enum.TipoVeiculo;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,6 +35,9 @@ public class Veiculo {
 
     @Column(nullable = false)
     private Integer ano;
+
+    @Column(nullable = false) @Enumerated(EnumType.STRING)
+    private TipoVeiculo tipoVeiculo;
 
     @Column(nullable = false) @Enumerated(EnumType.STRING)
     private StatusVeiculo status;

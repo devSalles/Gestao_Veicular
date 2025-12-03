@@ -46,6 +46,27 @@ public class HandlerException {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(messageRestError);
     }
 
+    @ExceptionHandler(CnhRepetidaException.class)
+    public ResponseEntity<MessageRestError> CnhRepetidaException (CnhRepetidaException ex)
+    {
+        MessageRestError messageRestError =new MessageRestError(HttpStatus.CONFLICT,ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(messageRestError);
+    }
+
+    @ExceptionHandler(CnhIncompativelException.class)
+    public ResponseEntity<MessageRestError> CnhIncompativelException (CnhIncompativelException ex)
+    {
+        MessageRestError messageRestError = new MessageRestError(HttpStatus.BAD_REQUEST,ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageRestError);
+    }
+
+    @ExceptionHandler(CpfRepetidoException.class)
+    public ResponseEntity<MessageRestError> CpfRepetidoException(CpfRepetidoException ex)
+    {
+        MessageRestError messageRestError = new MessageRestError(HttpStatus.CONFLICT,ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(messageRestError);
+    }
+
     @ExceptionHandler(CpfNaoEncontradoException.class)
     public ResponseEntity<MessageRestError> CpfNaoEncontradoException(CpfNaoEncontradoException ex)
     {
@@ -67,8 +88,8 @@ public class HandlerException {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(messageRestError);
     }
 
-    @ExceptionHandler(StatusVazioException.class)
-    public ResponseEntity<MessageRestError> StatusVazioException(StatusVazioException ex)
+    @ExceptionHandler(NenhumVeiculoComStatusException.class)
+    public ResponseEntity<MessageRestError> StatusVazioException(NenhumVeiculoComStatusException ex)
     {
         MessageRestError messageRestError = new MessageRestError(HttpStatus.NOT_FOUND,ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(messageRestError);
