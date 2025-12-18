@@ -1,8 +1,8 @@
 package Gestao_Transporte.dto.motorista;
 
 import Gestao_Transporte.Enum.motoristaEnum.CategoriaCNH;
+import Gestao_Transporte.Enum.motoristaEnum.StatusMotorista;
 import Gestao_Transporte.entity.Motorista;
-import Gestao_Transporte.entity.Veiculo;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.br.CPF;
 
-import java.util.HashSet;
 
 @Getter
 @Setter
@@ -36,7 +35,30 @@ public class MotoristaRequestDTO {
     @NotNull(message = "Categoria obrigatória") @Enumerated(EnumType.STRING)
     private CategoriaCNH categoriaCNH;
 
-    public Motorista toMotorsita(Veiculo veiculo)
+    @NotNull(message = "Status de motorista obrigatória")
+    @Enumerated(EnumType.STRING)
+    private StatusMotorista statusMotorista;
+
+//    public Motorista toMotorsita(Veiculo veiculo)
+//    {
+//        Motorista motorista = new Motorista();
+//
+//        motorista.setNome(this.nome);
+//        motorista.setCpf(this.cpf);
+//        motorista.setCnh(this.cnh);
+//        motorista.setCategoria(this.categoriaCNH);
+//
+//        if(motorista.getVeiculos() == null)
+//        {
+//            motorista.setVeiculos(new HashSet<>());
+//        }
+//
+//        motorista.getVeiculos().add(veiculo);
+//
+//        return motorista;
+//    }
+
+    public Motorista salvarMotorista()
     {
         Motorista motorista = new Motorista();
 
@@ -44,13 +66,7 @@ public class MotoristaRequestDTO {
         motorista.setCpf(this.cpf);
         motorista.setCnh(this.cnh);
         motorista.setCategoria(this.categoriaCNH);
-
-        if(motorista.getVeiculos() == null)
-        {
-            motorista.setVeiculos(new HashSet<>());
-        }
-
-        motorista.getVeiculos().add(veiculo);
+        motorista.setStatusMotorista(this.statusMotorista);
 
         return motorista;
     }
