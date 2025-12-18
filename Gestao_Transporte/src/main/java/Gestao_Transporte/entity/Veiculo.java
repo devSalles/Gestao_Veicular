@@ -2,6 +2,7 @@ package Gestao_Transporte.entity;
 
 import Gestao_Transporte.Enum.StatusVeiculo;
 import Gestao_Transporte.Enum.TipoVeiculo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -42,6 +44,18 @@ public class Veiculo {
     @Column(nullable = false) @Enumerated(EnumType.STRING)
     private StatusVeiculo status;
 
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Veiculo veiculo)) return false;
+        return Objects.equals(getId(), veiculo.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(getId());
+    }
+
     @ManyToMany(mappedBy = "veiculos")
+    @JsonIgnore
     private Set<Motorista> motoristas =new HashSet<>();
 }

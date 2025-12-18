@@ -40,7 +40,7 @@ public class VeiculoService {
     @Transactional
     public Veiculo atualizarVeiculo(Long id , VeiculoUpdateDTO veiculoUpdateDTO)
     {
-        Veiculo veiculo = this.veiculoRespoitory.findById(id).orElseThrow(IdNaoEncontradoException::new);
+        Veiculo veiculo = pesquisarID(id);
 
         if(veiculo.getStatus() == StatusVeiculo.EM_VIAGEM)
         {
@@ -55,8 +55,8 @@ public class VeiculoService {
     @Transactional
     public VeiculoResponseDTO vincularVeiculo(Long idVeiculo, Long idMotorista)
     {
+        Veiculo veiculoVinc = pesquisarID(idVeiculo);
         Motorista motoristaVincular = this.motoristaRepository.findById(idMotorista).orElseThrow(()->new  IdNaoEncontradoException("ID de motorista não encontrado"));
-        Veiculo veiculoVinc = this.veiculoRespoitory.findById(idVeiculo).orElseThrow(()->new  IdNaoEncontradoException("ID de veiculo não encontrado"));
 
         motoristaVincular.getVeiculos().add(veiculoVinc);
         veiculoVinc.getMotoristas().add(motoristaVincular);
@@ -104,7 +104,7 @@ public class VeiculoService {
     //metodo para colocar o veículo em manutenção
     public Veiculo colocarEmManutencao(Long id)
     {
-        Veiculo veiculo = this.veiculoRespoitory.findById(id).orElseThrow(() -> new IdNaoEncontradoException("ID de veículo não encontrado"));
+        Veiculo veiculo = pesquisarID(id);
 
         if(veiculo.getStatus() == StatusVeiculo.EM_VIAGEM)
         {
@@ -122,7 +122,7 @@ public class VeiculoService {
 
     public Veiculo retiradaManutencao(Long id)
     {
-        Veiculo veiculo = this.veiculoRespoitory.findById(id).orElseThrow(() -> new IdNaoEncontradoException("ID de veículo não encontrado"));
+        Veiculo veiculo = pesquisarID(id);
 
         if(veiculo.getStatus() != StatusVeiculo.MANUTENCAO)
         {
@@ -135,7 +135,7 @@ public class VeiculoService {
 
     public Veiculo iniciarViagem(Long idVeiculo, Long idMotorista)
     {
-        Veiculo veiculo = this.veiculoRespoitory.findById(idVeiculo).orElseThrow(() -> new IdNaoEncontradoException("ID de veículo não encontrado"));
+        Veiculo veiculo = pesquisarID(idVeiculo);
         Motorista motorista = this.motoristaRepository.findById(idMotorista).orElseThrow(() -> new IdNaoEncontradoException("ID de motorista não encontrado"));
 
         if(veiculo.getStatus()==StatusVeiculo.EM_VIAGEM)
@@ -159,7 +159,7 @@ public class VeiculoService {
 
     public Veiculo finalizarViagem(Long id,boolean enviarParaManutencao)
     {
-        Veiculo veiculo = this.veiculoRespoitory.findById(id).orElseThrow(() -> new IdNaoEncontradoException("ID de veículo não encontrado"));
+        Veiculo veiculo = pesquisarID(id);
 
         if(veiculo.getStatus()==StatusVeiculo.DISPONIVEL)
         {
@@ -176,6 +176,14 @@ public class VeiculoService {
         }
 
         return this.veiculoRespoitory.save(veiculo);
+    }
+
+    // -------- METODOS AUXILIARES --------
+
+    //Função responsável por realizar busca por ID
+    public Veiculo pesquisarID(Long id)
+    {
+        return this.veiculoRespoitory.findById(id).orElseThrow(() -> new IdNaoEncontradoException("ID de veículo não encontrado"));
     }
 
     //Função de formatação de formato de placa(remove espaços e caracteres especiais)
