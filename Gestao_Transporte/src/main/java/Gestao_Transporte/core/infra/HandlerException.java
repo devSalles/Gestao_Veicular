@@ -7,6 +7,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.sql.PreparedStatement;
+
 @ControllerAdvice
 public class HandlerException {
 
@@ -114,5 +116,19 @@ public class HandlerException {
     {
         MessageRestError messageRestError = new MessageRestError(HttpStatus.BAD_REQUEST,ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageRestError);
+    }
+
+    @ExceptionHandler(MotoristaIndisponivelException.class)
+    public ResponseEntity<MessageRestError> MotoristaIndisponivelException(MotoristaIndisponivelException ex)
+    {
+        MessageRestError messageRestError = new MessageRestError(HttpStatus.BAD_REQUEST,ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageRestError);
+    }
+
+    @ExceptionHandler(VeiculoVinculadoException.class)
+    public ResponseEntity<MessageRestError> VeiculoVinculadoException(VeiculoVinculadoException ex)
+    {
+        MessageRestError messageRestError = new MessageRestError(HttpStatus.CONFLICT,ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(messageRestError);
     }
 }
