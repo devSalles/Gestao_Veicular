@@ -23,7 +23,7 @@ public class VeiculoService {
     private final MotoristaRepository motoristaRepository;
 
     @Transactional
-    public Veiculo salvarVeiculo(VeiculoRequestDTO veiculoRequestDTO)
+    public VeiculoResponseDTO salvarVeiculo(VeiculoRequestDTO veiculoRequestDTO)
     {
         if(veiculoRespoitory.existsByPlaca(veiculoRequestDTO.getPlaca()))
         {
@@ -34,7 +34,9 @@ public class VeiculoService {
         veiculoNew.setPlaca(limparPlaca(veiculoRequestDTO.getPlaca()));
         veiculoNew.setStatus(StatusVeiculo.DISPONIVEL);
 
-        return this.veiculoRespoitory.save(veiculoNew);
+        this.veiculoRespoitory.save(veiculoNew);
+
+        return VeiculoResponseDTO.fromVeiculo(veiculoNew);
     }
 
     @Transactional

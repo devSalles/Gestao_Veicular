@@ -107,7 +107,7 @@ public class MotoristaService {
         return motoristaCPF;
     }
 
-    //Metodo para validsção de veículo e motorista para iniciar viagem
+    //Metodo para validação de veículo e motorista para iniciar viagem
     public void validarViagens(Long idMotorista, Veiculo veiculo)
     {
         Motorista motoristaID = buscarID(idMotorista);
