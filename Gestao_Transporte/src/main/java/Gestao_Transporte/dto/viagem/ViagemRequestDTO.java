@@ -4,7 +4,6 @@ import Gestao_Transporte.Enum.StatusViagem;
 import Gestao_Transporte.entity.Motorista;
 import Gestao_Transporte.entity.Veiculo;
 import Gestao_Transporte.entity.Viagem;
-import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.*;
@@ -41,7 +40,6 @@ public class ViagemRequestDTO {
     private Double kmPercorrido;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private StatusViagem statusViagem;
 
     public Viagem toViagem(Motorista motorista, Veiculo veiculo)
