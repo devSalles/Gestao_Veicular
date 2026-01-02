@@ -7,8 +7,12 @@ import Gestao_Transporte.service.ViagemService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/viagem")
@@ -71,5 +75,32 @@ public class ViagemController {
     public ResponseEntity<?> buscarMotorista(@PathVariable Long idMotorista)
     {
         return ResponseEntity.ok(this.viagemService.buscarMotorista(idMotorista));
+    }
+
+    @GetMapping("/consulta-periodo-por-data-saida")
+    public ResponseEntity<?> consultarDataSaida(
+            @RequestParam("inicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate inicio,
+            @RequestParam("fim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fim
+    )
+    {
+        return ResponseEntity.ok(this.viagemService.consultarDataEntreSaida(inicio,fim));
+    }
+
+    @GetMapping("/consulta-periodo-data-chegada-prevista")
+    public ResponseEntity<?> consultaChegadaPrevista(
+            @RequestParam("inicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate inicio,
+            @RequestParam("fim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fim
+    )
+    {
+        return ResponseEntity.ok(this.viagemService.consultarDataEntreChegadaPrevista(inicio,fim));
+    }
+
+    @GetMapping("/consulta-periodo-data-chegada-real")
+    public ResponseEntity<?> consultaChegadaReal(
+            @RequestParam("inicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate inicio,
+            @RequestParam("fim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fim
+    )
+    {
+        return ResponseEntity.ok(this.viagemService.consultarDataEntreChegadaReal(inicio,fim));
     }
 }

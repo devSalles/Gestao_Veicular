@@ -93,6 +93,13 @@ public class MotoristaService {
         return MotoristaResponseDTO.fromMotorista(motoristaCpf);
     }
 
+//    public boolean excluirPorId(Long id)
+//    {
+//        Motorista motoristaID = buscarID(id);
+//        this.motoristaRepository.delete(motoristaID);
+//        return true;
+//    }
+
     //-------------- Metodos auxiliares --------------
 
     //Metodo responsável po realizar busca por CPF

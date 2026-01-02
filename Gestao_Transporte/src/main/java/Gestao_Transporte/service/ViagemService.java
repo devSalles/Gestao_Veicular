@@ -2,10 +2,7 @@ package Gestao_Transporte.service;
 
 import Gestao_Transporte.Enum.StatusVeiculo;
 import Gestao_Transporte.Enum.StatusViagem;
-import Gestao_Transporte.core.exception.IdNaoEncontradoException;
-import Gestao_Transporte.core.exception.KmInvalidoException;
-import Gestao_Transporte.core.exception.NenhumCadastroException;
-import Gestao_Transporte.core.exception.ViagemJaFinalizadaException;
+import Gestao_Transporte.core.exception.*;
 import Gestao_Transporte.dto.viagem.ViagemRequestDTO;
 import Gestao_Transporte.dto.viagem.ViagemResponseDTO;
 import Gestao_Transporte.entity.Motorista;
@@ -19,7 +16,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -165,6 +164,66 @@ public class ViagemService {
         if(viagens.isEmpty())
         {
             throw new NenhumCadastroException("Nenhuma viagem cadastrada com esse status");
+        }
+
+        return viagens;
+    }
+
+    public List<Viagem> consultarDataEntreSaida(LocalDate inicio, LocalDate fim)
+    {
+        if(fim.isAfter(inicio))
+        {
+            throw new DataAnteriorException();
+        }
+
+        LocalDateTime dataInicioFormatada = inicio.atStartOfDay();
+        LocalDateTime dataFinalFormatada = fim.atTime(LocalTime.MAX);
+
+        List<Viagem> viagens = this.viagemRepository.findByDataSaidaBetween(dataInicioFormatada,dataFinalFormatada);
+
+        if(viagens.isEmpty())
+        {
+            throw new NenhumCadastroException("Nenhum cadastro realizado com essas datas");
+        }
+
+        return viagens;
+    }
+
+    public List<Viagem> consultarDataEntreChegadaPrevista(LocalDate inicio, LocalDate fim)
+    {
+        if(fim.isAfter(inicio))
+        {
+            throw new DataAnteriorException();
+        }
+
+        LocalDateTime dataInicioFormatada = inicio.atStartOfDay();
+        LocalDateTime dataFinalFormatada = fim.atTime(LocalTime.MAX);
+
+        List<Viagem> viagens = this.viagemRepository.findByDataChegadaPrevistaBetween(dataInicioFormatada,dataFinalFormatada);
+
+        if(viagens.isEmpty())
+        {
+            throw new NenhumCadastroException("Nenhum cadastro realizado com essas datas");
+        }
+
+        return viagens;
+    }
+
+    public List<Viagem> consultarDataEntreChegadaReal(LocalDate inicio, LocalDate fim)
+    {
+        if(fim.isAfter(inicio))
+        {
+            throw new DataAnteriorException();
+        }
+
+        LocalDateTime dataInicioFormatada = inicio.atStartOfDay();
+        LocalDateTime dataFinalFormata = fim.atTime(LocalTime.MAX);
+
+        List<Viagem> viagens = this.viagemRepository.findByDataChegadaRealBetween(dataInicioFormatada,dataFinalFormata);
+
+        if(viagens.isEmpty())
+        {
+            throw new NenhumCadastroException("Nenhum cadastro realizado com essas datas");
         }
 
         return viagens;
