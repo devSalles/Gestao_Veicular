@@ -25,7 +25,7 @@ public class IniciarViagemRequestDTO {
     @NotNull(message = "O destino e obrigatório") @NotBlank(message = "O destino e obrigatório")
     private String destino;
 
-    @NotNull(message = "A data de saída e obrigatória") @PastOrPresent(message = "A data de saída não pode ser futura")
+    @NotNull(message = "A data de saída e obrigatória") @Past(message = "A data de saída não pode ser futura")
     private LocalDateTime dataSaida;
 
     @NotNull(message = "A data de chegada prevista e obrigatória") @Future(message = "A data de chegada prevista deve ser no futuro")

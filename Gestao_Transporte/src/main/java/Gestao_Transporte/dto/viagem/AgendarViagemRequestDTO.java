@@ -16,7 +16,7 @@ import java.util.HashSet;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ViagemRequestDTO {
+public class AgendarViagemRequestDTO {
 
     @NotNull(message = "Origem do destino obrigatório") @NotBlank(message = "Origem do destino obrigatório")
     private String origem;
@@ -30,9 +30,6 @@ public class ViagemRequestDTO {
     @NotNull(message = "A data de chegada prevista e obrigatória") @Future(message = "A data de chegada prevista deve ser no futuro")
     private LocalDateTime dataChegadaPrevista;
 
-    @NotNull(message = "A data chegada e obrigatória") @PastOrPresent(message = "A data de chegada real não pode ser futura")
-    private LocalDateTime dataChegadaReal;
-
     @NotNull(message = "A quilometragem e obrigatória") @DecimalMin(value = "0.1",message = "o valor deve ser maior que 0.1Km")
     private Double kmPercorrido;
 
@@ -44,7 +41,6 @@ public class ViagemRequestDTO {
         viagem.setDestino(this.destino);
         viagem.setDataSaida(this.dataSaida);
         viagem.setDataChegadaPrevista(this.dataChegadaPrevista);
-        viagem.setDataChegadaReal(this.dataChegadaReal);
         viagem.setKmPercorrido(this.kmPercorrido);
 
         if(viagem.getMotorista() == null)

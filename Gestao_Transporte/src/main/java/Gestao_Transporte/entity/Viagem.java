@@ -44,6 +44,9 @@ public class Viagem {
     @Column(nullable = false)
     private StatusViagem status;
 
+    @Column
+    private Long atraso;
+
     @ManyToOne(optional = false)
     @JoinColumn(name = "veiculo_id")
     private Veiculo veiculo;
