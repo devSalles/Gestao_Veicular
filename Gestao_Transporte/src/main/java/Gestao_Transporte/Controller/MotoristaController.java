@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
 @RestController
 @RequestMapping( "/motorista")
 @RequiredArgsConstructor
@@ -31,7 +30,7 @@ public class MotoristaController {
     }
 
     @PutMapping("/atualizar-motorista/{id}")
-    public ResponseEntity<?> atualizarMotorista(@PathVariable Long id, @RequestBody MotoristaUpdateDTO dto)
+    public ResponseEntity<?> atualizarMotorista(@PathVariable Long id, @RequestBody @Valid MotoristaUpdateDTO dto)
     {
         return ResponseEntity.ok(this.motoristaService.atualizarMotorista(id,dto));
     }
@@ -52,5 +51,12 @@ public class MotoristaController {
     public ResponseEntity<?> listarCPF(@PathVariable String cpf)
     {
         return ResponseEntity.ok(this.motoristaService.exibirPorCPF(cpf));
+    }
+
+    @DeleteMapping("/excluir/{idMotorista}")
+    public ResponseEntity<?> excluirMotorista(@PathVariable Long idMotorista)
+    {
+        this.motoristaService.desativarMotorista(idMotorista);
+        return ResponseEntity.noContent().build();
     }
 }

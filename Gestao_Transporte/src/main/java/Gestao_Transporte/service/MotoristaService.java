@@ -1,5 +1,6 @@
 package Gestao_Transporte.service;
 
+import Gestao_Transporte.Enum.StatusViagem;
 import Gestao_Transporte.Enum.motoristaEnum.StatusMotorista;
 import Gestao_Transporte.core.exception.*;
 import Gestao_Transporte.dto.motorista.MotoristaRequestDTO;
@@ -9,8 +10,10 @@ import Gestao_Transporte.entity.Motorista;
 import Gestao_Transporte.entity.Veiculo;
 import Gestao_Transporte.repository.MotoristaRepository;
 import Gestao_Transporte.repository.VeiculoRespoitory;
+import Gestao_Transporte.repository.ViagemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,7 +23,9 @@ public class MotoristaService {
 
     private final MotoristaRepository motoristaRepository;
     private final VeiculoRespoitory veiculoRespoitory;
+    private final ViagemRepository viagemRepository;
 
+    @Transactional
     public MotoristaResponseDTO salvarMotorista(MotoristaRequestDTO motoristaRequestDTO)
     {
         if(this.motoristaRepository.existsByCnh(motoristaRequestDTO.getCnh()))
@@ -40,6 +45,7 @@ public class MotoristaService {
         return MotoristaResponseDTO.fromMotorista(motorista);
     }
 
+    @Transactional
     public Motorista atualizarMotorista(Long id, MotoristaUpdateDTO motoristaUpdateDTO)
     {
         Motorista motoristaID = buscarID(id);
@@ -49,6 +55,7 @@ public class MotoristaService {
         return this.motoristaRepository.save(motoristaAtualizado);
     }
 
+    @Transactional
     public Motorista vincularVeiculo(Long idMotorista, Long idVeiculo)
     {
         Motorista motoristaID = buscarID(idMotorista);
@@ -93,12 +100,20 @@ public class MotoristaService {
         return MotoristaResponseDTO.fromMotorista(motoristaCpf);
     }
 
-//    public boolean excluirPorId(Long id)
-//    {
-//        Motorista motoristaID = buscarID(id);
-//        this.motoristaRepository.delete(motoristaID);
-//        return true;
-//    }
+    @Transactional
+    public void desativarMotorista(Long id)
+    {
+        Motorista motoristaID = buscarID(id);
+
+        boolean possuiViagemAtivaOuAgendada = viagemRepository.existsByMotoristaIdAndStatusIn(id,List.of(StatusViagem.AGENDADA,StatusViagem.EM_ANDAMENTO));
+        if(possuiViagemAtivaOuAgendada)
+        {
+            throw new ViagemAtivaOuAgendadaException();
+        }
+
+        motoristaID.setStatusMotorista(StatusMotorista.INATIVO);
+        this.motoristaRepository.save(motoristaID);
+    }
 
     //-------------- Metodos auxiliares --------------
 
