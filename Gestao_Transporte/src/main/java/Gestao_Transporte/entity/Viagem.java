@@ -34,7 +34,7 @@ public class Viagem {
     @Column(nullable = false)
     private LocalDateTime dataChegadaPrevista;
 
-    @Column(nullable = false)
+    @Column
     private LocalDateTime dataChegadaReal;
 
     @Column(nullable = false)
