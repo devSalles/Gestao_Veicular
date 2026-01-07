@@ -3,7 +3,7 @@ package Gestao_Transporte.Controller;
 import Gestao_Transporte.Enum.StatusViagem;
 import Gestao_Transporte.dto.viagem.FinalizarViagemDTO;
 import Gestao_Transporte.dto.viagem.IniciarViagemRequestDTO;
-import Gestao_Transporte.dto.viagem.ViagemRequestDTO;
+import Gestao_Transporte.dto.viagem.AgendarViagemRequestDTO;
 import Gestao_Transporte.service.ViagemService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ public class ViagemController {
     private final ViagemService viagemService;
 
     @PostMapping("/agendar-viagem/motorista-id/{idMotorista}/veiculo-id/{idVeiculo}")
-    public ResponseEntity<?> agendarViagem(@RequestBody ViagemRequestDTO dto, @PathVariable Long idMotorista, @PathVariable Long idVeiculo)
+    public ResponseEntity<?> agendarViagem(@RequestBody AgendarViagemRequestDTO dto, @PathVariable Long idMotorista, @PathVariable Long idVeiculo)
     {
         return ResponseEntity.ok(this.viagemService.agendarViagem(dto,idMotorista,idVeiculo));
     }
@@ -35,8 +35,7 @@ public class ViagemController {
     @PutMapping("/finalizar-viagem/{idViagem}")
     public ResponseEntity<?> finalizarViagem(@PathVariable Long idViagem, @RequestBody FinalizarViagemDTO viagemDTO)
     {
-        this.viagemService.finalizarViagem(idViagem,viagemDTO.kmPercorrido());
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(this.viagemService.finalizarViagem(idViagem,viagemDTO.kmPercorrido()));
     }
 
     @GetMapping("/consultar-por-status/{statusViagem}")

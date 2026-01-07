@@ -4,7 +4,7 @@ import Gestao_Transporte.Enum.StatusVeiculo;
 import Gestao_Transporte.Enum.StatusViagem;
 import Gestao_Transporte.core.exception.*;
 import Gestao_Transporte.dto.viagem.IniciarViagemRequestDTO;
-import Gestao_Transporte.dto.viagem.ViagemRequestDTO;
+import Gestao_Transporte.dto.viagem.AgendarViagemRequestDTO;
 import Gestao_Transporte.dto.viagem.ViagemResponseConsultasDTO;
 import Gestao_Transporte.dto.viagem.ViagemResponseDTO;
 import Gestao_Transporte.entity.Motorista;
@@ -32,17 +32,19 @@ public class ViagemService {
     private final MotoristaService motoristaService;
 
     @Transactional
-    public ViagemResponseDTO agendarViagem(ViagemRequestDTO dto, Long idMotorista, Long idVeiculo)
+    public ViagemResponseDTO agendarViagem(AgendarViagemRequestDTO dto, Long idMotorista, Long idVeiculo)
     {
         Motorista motoristaID = this.motoristaRepository.findById(idMotorista).orElseThrow(()->new IdNaoEncontradoException("ID de motorista não encontrado"));
         Veiculo veiculoID = this.veiculoRespoitory.findById(idVeiculo).orElseThrow(() -> new IdNaoEncontradoException("ID de veículo não encontrado"));
 
+        if(dto.getDataChegadaPrevista().isBefore(dto.getDataSaida()))
+        {
+            throw new DataException("Data de chegada não pode ser anterior que a data de saída");
+        }
+
         Viagem viagem = dto.toViagem(motoristaID,veiculoID);
         motoristaService.validarViagens(idMotorista,veiculoID);
-        if(dto.getDataChegadaReal() == null)
-        {
-            viagem.setDataChegadaReal(null);
-        }
+
         viagem.setVeiculo(veiculoID);
         viagem.setMotorista(motoristaID);
         viagem.setStatus(StatusViagem.AGENDADA);
@@ -57,19 +59,25 @@ public class ViagemService {
         Motorista motoristaID = this.motoristaRepository.findById(idMotorista).orElseThrow(()->new IdNaoEncontradoException("ID de motorista não encontrado"));
         Veiculo veiculoID = this.veiculoRespoitory.findById(idVeiculo).orElseThrow(() -> new IdNaoEncontradoException("ID de veículo não encontrado"));
 
+        if(dto.getDataSaida().isAfter(dto.getDataChegadaPrevista()))
+        {
+            throw new DataException("Data de saída não pode ser maior que data de chegada prevista");
+        }
+
         Viagem viagem = dto.toViagem(motoristaID,veiculoID);
+
         motoristaService.validarViagens(idMotorista,veiculoID);
         viagem.setMotorista(motoristaID);
         viagem.setVeiculo(veiculoID);
         viagem.setStatus(StatusViagem.EM_ANDAMENTO);
+
         this.viagemRepository.save(viagem);
 
         return ViagemResponseDTO.fromViagem(viagem);
     }
 
-    //Realizar teste de atraso
     @Transactional
-    public void finalizarViagem(Long id, Double distanciaPercorrida)
+    public ViagemResponseDTO finalizarViagem(Long id, Double distanciaPercorrida)
     {
         Viagem viagemID = viagemRepository.findById(id).orElseThrow(()->new IdNaoEncontradoException("ID de viagem não encontrado"));
 
@@ -93,6 +101,7 @@ public class ViagemService {
         if(houveAtrasos)
         {
             long atrasoMinutos = Duration.between(chegadaPrevista,chegadaReal).toMinutes();
+            viagemID.setAtraso(atrasoMinutos);
         }
 
         Double totalKm = viagemID.getKmPercorrido()+distanciaPercorrida;
@@ -100,11 +109,12 @@ public class ViagemService {
 
         Veiculo veiculo = viagemID.getVeiculo();
         veiculo.setStatus(StatusVeiculo.DISPONIVEL);
-
         viagemID.setStatus(StatusViagem.FINALIZADA);
 
         this.veiculoRespoitory.save(veiculo);
         this.viagemRepository.save(viagemID);
+
+        return ViagemResponseDTO.fromViagem(viagemID);
     }
 
     public List<ViagemResponseConsultasDTO> listarTodas()
@@ -164,7 +174,7 @@ public class ViagemService {
     {
         if(fim.isAfter(inicio))
         {
-            throw new DataAnteriorException();
+            throw new DataException();
         }
 
         LocalDateTime dataInicioFormatada = inicio.atStartOfDay();
@@ -184,7 +194,7 @@ public class ViagemService {
     {
         if(fim.isAfter(inicio))
         {
-            throw new DataAnteriorException();
+            throw new DataException();
         }
 
         LocalDateTime dataInicioFormatada = inicio.atStartOfDay();
@@ -204,7 +214,7 @@ public class ViagemService {
     {
         if(fim.isAfter(inicio))
         {
-            throw new DataAnteriorException();
+            throw new DataException();
         }
 
         LocalDateTime dataInicioFormatada = inicio.atStartOfDay();
