@@ -1,11 +1,8 @@
 package Gestao_Transporte.dto.viagem;
 
-import Gestao_Transporte.Enum.StatusViagem;
 import Gestao_Transporte.entity.Motorista;
 import Gestao_Transporte.entity.Veiculo;
 import Gestao_Transporte.entity.Viagem;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -39,9 +36,6 @@ public class ViagemRequestDTO {
     @NotNull(message = "A quilometragem e obrigatória") @DecimalMin(value = "0.1",message = "o valor deve ser maior que 0.1Km")
     private Double kmPercorrido;
 
-    @Enumerated(EnumType.STRING)
-    private StatusViagem statusViagem;
-
     public Viagem toViagem(Motorista motorista, Veiculo veiculo)
     {
         Viagem viagem = new Viagem();
@@ -52,14 +46,12 @@ public class ViagemRequestDTO {
         viagem.setDataChegadaPrevista(this.dataChegadaPrevista);
         viagem.setDataChegadaReal(this.dataChegadaReal);
         viagem.setKmPercorrido(this.kmPercorrido);
-        viagem.setStatus(this.statusViagem);
 
         if(viagem.getMotorista() == null)
         {
             veiculo.setMotoristas(new HashSet<>());
         }
         veiculo.getMotoristas().add(motorista);
-
 
         if(viagem.getVeiculo() == null)
         {
