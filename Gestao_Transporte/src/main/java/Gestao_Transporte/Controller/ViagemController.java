@@ -2,17 +2,15 @@ package Gestao_Transporte.Controller;
 
 import Gestao_Transporte.Enum.StatusViagem;
 import Gestao_Transporte.dto.viagem.FinalizarViagemDTO;
+import Gestao_Transporte.dto.viagem.IniciarViagemRequestDTO;
 import Gestao_Transporte.dto.viagem.ViagemRequestDTO;
 import Gestao_Transporte.service.ViagemService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/viagem")
@@ -29,7 +27,7 @@ public class ViagemController {
     }
 
     @PostMapping("/iniciar-viagem/motorista-id/{idMotorista}/veiculo-id/{idVeiculo}")
-    public ResponseEntity<?> iniciarViagem(@RequestBody ViagemRequestDTO dto, @PathVariable Long idMotorista, @PathVariable Long idVeiculo)
+    public ResponseEntity<?> iniciarViagem(@RequestBody IniciarViagemRequestDTO dto, @PathVariable Long idMotorista, @PathVariable Long idVeiculo)
     {
         return ResponseEntity.ok(this.viagemService.iniciarViagem(dto,idMotorista,idVeiculo));
     }
@@ -39,12 +37,6 @@ public class ViagemController {
     {
         this.viagemService.finalizarViagem(idViagem,viagemDTO.kmPercorrido());
         return ResponseEntity.noContent().build();
-    }
-
-    @PutMapping("/cancelar-viagem/{idViagem}")
-    public ResponseEntity<?> cancelarViagem(@PathVariable Long idViagem)
-    {
-        return ResponseEntity.ok(this.viagemService.cancelar(idViagem));
     }
 
     @GetMapping("/consultar-por-status/{statusViagem}")
@@ -102,5 +94,12 @@ public class ViagemController {
     )
     {
         return ResponseEntity.ok(this.viagemService.consultarDataEntreChegadaReal(inicio,fim));
+    }
+
+    @DeleteMapping("/cancelar-viagem/{idViagem}")
+    public ResponseEntity<?> cancelarViagem(@PathVariable Long idViagem)
+    {
+        this.viagemService.cancelar(idViagem);
+        return ResponseEntity.noContent().build();
     }
 }

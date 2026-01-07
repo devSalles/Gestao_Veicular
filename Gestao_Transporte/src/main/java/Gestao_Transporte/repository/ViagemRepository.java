@@ -21,4 +21,8 @@ public interface ViagemRepository extends JpaRepository<Viagem,Long> {
     List<Viagem> findByDataChegadaPrevistaBetween(LocalDateTime dataInicio, LocalDateTime dataFim);
 
     List<Viagem> findByDataChegadaRealBetween(LocalDateTime dataInicio, LocalDateTime dataFim);
+
+    boolean existsByMotoristaIdAndStatusIn(Long id, List<StatusViagem> statusViagem);
+
+    boolean existsByVeiculoIdAndStatusIn(Long id, List<StatusViagem> statusViagens);
 }
