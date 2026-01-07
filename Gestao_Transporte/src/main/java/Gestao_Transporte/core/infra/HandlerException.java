@@ -83,6 +83,13 @@ public class HandlerException {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageRestError);
     }
 
+    @ExceptionHandler(ViagemAtivaOuAgendadaException.class)
+    public ResponseEntity<MessageRestError> ViagemAtivaOuAgendadaException(ViagemAtivaOuAgendadaException ex)
+    {
+        MessageRestError messageRestError = new MessageRestError(HttpStatus.BAD_REQUEST,ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageRestError);
+    }
+
     //--------------------------- EXCEÇÕES DE VEÍCULOS ---------------------------
 
     @ExceptionHandler(PlacaDuplicadaException.class)
@@ -132,6 +139,13 @@ public class HandlerException {
     {
         MessageRestError messageRestError = new MessageRestError(HttpStatus.CONFLICT,ex.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(messageRestError);
+    }
+
+    @ExceptionHandler(ViagensAtivasOuFinalizadasException.class)
+    public ResponseEntity<MessageRestError> ViagensAtivasOuFinalizadasException(ViagensAtivasOuFinalizadasException ex)
+    {
+        MessageRestError messageRestError = new MessageRestError(HttpStatus.BAD_REQUEST,ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageRestError);
     }
 
     //--------------------------- EXCEÇÕES DE VIAGENS ---------------------------
