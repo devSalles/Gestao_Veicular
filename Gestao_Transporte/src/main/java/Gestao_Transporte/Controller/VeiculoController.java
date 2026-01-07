@@ -78,4 +78,10 @@ public class VeiculoController {
         return ResponseEntity.ok(this.veiculoService.exibirPorStatus(statusVeiculo));
     }
 
+    @DeleteMapping("/desativar-veiculo/{idMotorista}")
+    public ResponseEntity<?> desativarVeiculo(@PathVariable Long idMotorista)
+    {
+        this.veiculoService.desativarVeiculo(idMotorista);
+        return ResponseEntity.noContent().build();
+    }
 }

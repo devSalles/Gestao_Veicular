@@ -1,6 +1,7 @@
 package Gestao_Transporte.service;
 
 import Gestao_Transporte.Enum.StatusVeiculo;
+import Gestao_Transporte.Enum.StatusViagem;
 import Gestao_Transporte.core.exception.*;
 import Gestao_Transporte.dto.veiculo.VeiculoRequestDTO;
 import Gestao_Transporte.dto.veiculo.VeiculoResponseDTO;
@@ -10,7 +11,8 @@ import Gestao_Transporte.entity.Motorista;
 import Gestao_Transporte.entity.Veiculo;
 import Gestao_Transporte.repository.MotoristaRepository;
 import Gestao_Transporte.repository.VeiculoRespoitory;
-import jakarta.transaction.Transactional;
+import Gestao_Transporte.repository.ViagemRepository;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -20,6 +22,7 @@ import java.util.List;
 public class VeiculoService {
 
     private final VeiculoRespoitory veiculoRespoitory;
+    private final ViagemRepository viagemRepository;
     private final MotoristaRepository motoristaRepository;
 
     @Transactional
@@ -178,6 +181,21 @@ public class VeiculoService {
         }
 
         return this.veiculoRespoitory.save(veiculo);
+    }
+
+    @Transactional
+    public void desativarVeiculo(Long id)
+    {
+        Veiculo veiculo = pesquisarID(id);
+
+        boolean possuiViagensAtivasOuFinalizadas = this.viagemRepository.existsByVeiculoIdAndStatusIn(id,List.of(StatusViagem.FINALIZADA,StatusViagem.EM_ANDAMENTO));
+        if(possuiViagensAtivasOuFinalizadas)
+        {
+            throw new ViagemAtivaOuAgendadaException();
+        }
+
+        veiculo.setStatus(StatusVeiculo.INDISPONIVEL);
+        this.veiculoRespoitory.save(veiculo);
     }
 
     // -------- METODOS AUXILIARES --------
