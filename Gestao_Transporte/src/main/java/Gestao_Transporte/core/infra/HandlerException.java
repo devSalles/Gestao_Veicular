@@ -164,8 +164,8 @@ public class HandlerException {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageRestError);
     }
 
-    @ExceptionHandler(DataAnteriorException.class)
-    public ResponseEntity<MessageRestError> DataAnteriorException(DataAnteriorException ex)
+    @ExceptionHandler(DataException.class)
+    public ResponseEntity<MessageRestError> DataAnteriorException(DataException ex)
     {
         MessageRestError messageRestError = new MessageRestError(HttpStatus.BAD_REQUEST,ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageRestError);
