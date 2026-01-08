@@ -3,6 +3,7 @@ package Gestao_Transporte.dto.veiculo;
 import Gestao_Transporte.Enum.StatusVeiculo;
 import Gestao_Transporte.entity.Veiculo;
 
+//Retorna apenas o veiculo na consulta por status
 public record VeiculoResponseStatusDTO(
         Long id,
         String placa,

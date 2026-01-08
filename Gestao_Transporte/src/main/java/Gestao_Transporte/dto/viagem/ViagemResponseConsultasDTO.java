@@ -7,6 +7,7 @@ import Gestao_Transporte.entity.Viagem;
 
 import java.time.LocalDateTime;
 
+//Classe usada para retornar no body em metodos GET
 public record ViagemResponseConsultasDTO(
         Long id,
         String origem,

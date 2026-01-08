@@ -10,21 +10,26 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class HandlerException {
 
-//    @ExceptionHandler(Exception.class)
-//    public ResponseEntity<MessageRestError> excecoesGlobais()
-//    {
-//        MessageRestError messageRestError = new MessageRestError(HttpStatus.INTERNAL_SERVER_ERROR,"Erro interno, tente novamente mais tarde");
-//        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(messageRestError);
-//    }
+    //--------------------------- EXCEÇÕES GLOBAIS ---------------------------
 
+    //Exceções globais
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<MessageRestError> Exception()
+    {
+        MessageRestError messageRestError = new MessageRestError(HttpStatus.INTERNAL_SERVER_ERROR,"Erro interno, tente novamente mais tarde");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(messageRestError);
+    }
+
+    //Exceção para requets invalidas
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<MessageRestError> excecaoParaCamposDeRequestInvalido(MethodArgumentNotValidException ex)
+    public ResponseEntity<MessageRestError> MethodArgumentNotValidException(MethodArgumentNotValidException ex)
     {
         String errorMessage = ex.getBindingResult().getFieldErrors().stream().map(e->e.getDefaultMessage()).findFirst().orElse("Erro de validação");
         MessageRestError messageRestError = new MessageRestError(HttpStatus.BAD_REQUEST,errorMessage);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageRestError);
     }
 
+    //Exceção de banco de dados vazio
     @ExceptionHandler(NenhumCadastroException.class)
     public ResponseEntity<MessageRestError> NenhumCadastroException(NenhumCadastroException ex)
     {

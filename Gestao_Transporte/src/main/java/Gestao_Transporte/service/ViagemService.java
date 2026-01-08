@@ -42,9 +42,16 @@ public class ViagemService {
             throw new DataException("Data de chegada não pode ser anterior que a data de saída");
         }
 
-        Viagem viagem = dto.toViagem(motoristaID,veiculoID);
+        boolean motoristaAgendado = this.viagemRepository.existsByMotoristaIdAndStatusIn(motoristaID.getId(),
+                List.of(StatusViagem.AGENDADA,StatusViagem.EM_ANDAMENTO));
+        if(motoristaAgendado)
+        {
+            throw new MotoristaIndisponivelException("Motorista já foi alocado em uma viagem agendada");
+        }
+
         motoristaService.validarViagens(idMotorista,veiculoID);
 
+        Viagem viagem = dto.toViagem(motoristaID,veiculoID);
         viagem.setVeiculo(veiculoID);
         viagem.setMotorista(motoristaID);
         viagem.setStatus(StatusViagem.AGENDADA);
@@ -64,9 +71,16 @@ public class ViagemService {
             throw new DataException("Data de saída não pode ser maior que data de chegada prevista");
         }
 
-        Viagem viagem = dto.toViagem(motoristaID,veiculoID);
+        boolean motoristaEmViagem = this.viagemRepository.existsByMotoristaIdAndStatusIn(motoristaID.getId(),
+                List.of(StatusViagem.EM_ANDAMENTO,StatusViagem.AGENDADA));
+        if(motoristaEmViagem)
+        {
+            throw new MotoristaIndisponivelException("Motorista já está em uma viagem em andamento ou em uma viagem agendada");
+        }
 
         motoristaService.validarViagens(idMotorista,veiculoID);
+
+        Viagem viagem = dto.toViagem(motoristaID,veiculoID);
         viagem.setMotorista(motoristaID);
         viagem.setVeiculo(veiculoID);
         viagem.setStatus(StatusViagem.EM_ANDAMENTO);
@@ -134,31 +148,31 @@ public class ViagemService {
         return ViagemResponseConsultasDTO.fromViagem(viagemID);
     }
 
-    public List<Viagem> buscarVeiculo(Long idVeiculo)
+    public List<ViagemResponseConsultasDTO> buscarVeiculo(Long idVeiculo)
     {
-        List<Viagem> viagemList=this.viagemRepository.findByVeiculoId(idVeiculo);
+        List<Viagem> viagens=this.viagemRepository.findByVeiculoId(idVeiculo);
 
-        if(viagemList.isEmpty())
+        if(viagens.isEmpty())
         {
             throw new IdNaoEncontradoException();
         }
 
-        return viagemList;
+        return viagens.stream().map(ViagemResponseConsultasDTO::fromViagem).toList();
     }
 
-    public List<Viagem> buscarMotorista(Long idMotorista)
+    public List<ViagemResponseConsultasDTO> buscarMotorista(Long idMotorista)
     {
-        List<Viagem> viagemList=this.viagemRepository.findByMotoristaId(idMotorista);
+        List<Viagem> viagens=this.viagemRepository.findByMotoristaId(idMotorista);
 
-        if(viagemList.isEmpty())
+        if(viagens.isEmpty())
         {
             throw new IdNaoEncontradoException();
         }
 
-        return viagemList;
+        return viagens.stream().map(ViagemResponseConsultasDTO::fromViagem).toList();
     }
 
-    public List<Viagem> consultaPorStatus(StatusViagem statusViagem)
+    public List<ViagemResponseConsultasDTO> consultaPorStatus(StatusViagem statusViagem)
     {
         List<Viagem> viagens = this.viagemRepository.findByStatus(statusViagem);
 
@@ -167,7 +181,7 @@ public class ViagemService {
             throw new NenhumCadastroException("Nenhuma viagem cadastrada com esse status");
         }
 
-        return viagens;
+        return viagens.stream().map(ViagemResponseConsultasDTO::fromViagem).toList();
     }
 
     public List<ViagemResponseConsultasDTO> consultarDataEntreSaida(LocalDate inicio, LocalDate fim)

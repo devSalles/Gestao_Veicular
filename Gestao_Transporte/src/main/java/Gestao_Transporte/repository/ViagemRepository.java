@@ -22,7 +22,9 @@ public interface ViagemRepository extends JpaRepository<Viagem,Long> {
 
     List<Viagem> findByDataChegadaRealBetween(LocalDateTime dataInicio, LocalDateTime dataFim);
 
+    //Verifica se motorista tem viagem ativa ou agendada
     boolean existsByMotoristaIdAndStatusIn(Long id, List<StatusViagem> statusViagem);
 
+    //Verifica se o veiculo possui viagem ativa ou finalizada
     boolean existsByVeiculoIdAndStatusIn(Long id, List<StatusViagem> statusViagens);
 }
