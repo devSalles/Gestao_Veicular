@@ -1,6 +1,6 @@
 package Gestao_Transporte.Enum.motoristaEnum;
 
-import Gestao_Transporte.Enum.TipoVeiculo;
+import Gestao_Transporte.Enum.veiculoEnum.TipoVeiculo;
 
 public enum CategoriaCNH {
     C,D,E;

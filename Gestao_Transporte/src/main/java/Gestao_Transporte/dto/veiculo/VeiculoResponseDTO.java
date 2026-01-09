@@ -1,6 +1,6 @@
 package Gestao_Transporte.dto.veiculo;
 
-import Gestao_Transporte.Enum.StatusVeiculo;
+import Gestao_Transporte.Enum.veiculoEnum.StatusVeiculo;
 import Gestao_Transporte.dto.motorista.MotoristaResponseDTO;
 import Gestao_Transporte.entity.Veiculo;
 import java.util.List;

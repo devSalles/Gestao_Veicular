@@ -1,7 +1,7 @@
 package Gestao_Transporte.entity;
 
-import Gestao_Transporte.Enum.StatusVeiculo;
-import Gestao_Transporte.Enum.TipoVeiculo;
+import Gestao_Transporte.Enum.veiculoEnum.StatusVeiculo;
+import Gestao_Transporte.Enum.veiculoEnum.TipoVeiculo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

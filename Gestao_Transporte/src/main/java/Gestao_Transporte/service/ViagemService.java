@@ -1,6 +1,6 @@
 package Gestao_Transporte.service;
 
-import Gestao_Transporte.Enum.StatusVeiculo;
+import Gestao_Transporte.Enum.veiculoEnum.StatusVeiculo;
 import Gestao_Transporte.Enum.StatusViagem;
 import Gestao_Transporte.core.exception.*;
 import Gestao_Transporte.core.exception.Motorista.MotoristaIndisponivelException;

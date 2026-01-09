@@ -1,4 +1,4 @@
-package Gestao_Transporte.Enum;
+package Gestao_Transporte.Enum.veiculoEnum;
 
 public enum TipoVeiculo {
     CAMINHAO,

@@ -1,6 +1,6 @@
 package Gestao_Transporte.Controller;
 
-import Gestao_Transporte.Enum.StatusVeiculo;
+import Gestao_Transporte.Enum.veiculoEnum.StatusVeiculo;
 import Gestao_Transporte.dto.veiculo.VeiculoRequestDTO;
 import Gestao_Transporte.dto.veiculo.VeiculoUpdateDTO;
 import Gestao_Transporte.service.VeiculoService;

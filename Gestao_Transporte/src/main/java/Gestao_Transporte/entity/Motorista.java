@@ -1,9 +1,7 @@
 package Gestao_Transporte.entity;
 
-import Gestao_Transporte.Enum.StatusVeiculo;
 import Gestao_Transporte.Enum.motoristaEnum.CategoriaCNH;
 import Gestao_Transporte.Enum.motoristaEnum.StatusMotorista;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
