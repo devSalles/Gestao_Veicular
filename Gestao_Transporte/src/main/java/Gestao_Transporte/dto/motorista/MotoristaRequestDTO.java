@@ -39,24 +39,6 @@ public class MotoristaRequestDTO {
     @Enumerated(EnumType.STRING)
     private StatusMotorista statusMotorista;
 
-//    public Motorista toMotorsita(Veiculo veiculo)
-//    {
-//        Motorista motorista = new Motorista();
-//
-//        motorista.setNome(this.nome);
-//        motorista.setCpf(this.cpf);
-//        motorista.setCnh(this.cnh);
-//        motorista.setCategoria(this.categoriaCNH);
-//
-//        if(motorista.getVeiculos() == null)
-//        {
-//            motorista.setVeiculos(new HashSet<>());
-//        }
-//
-//        motorista.getVeiculos().add(veiculo);
-//
-//        return motorista;
-//    }
 
     public Motorista salvarMotorista()
     {
