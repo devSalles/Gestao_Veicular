@@ -1,4 +1,4 @@
-package Gestao_Transporte.core.exception;
+package Gestao_Transporte.core.exception.Motorista;
 
 public class MotoristaIndisponivelException extends RuntimeException {
     public MotoristaIndisponivelException(String message) {

@@ -1,4 +1,4 @@
-package Gestao_Transporte.core.exception;
+package Gestao_Transporte.core.exception.Veiculo;
 
 public class NenhumVeiculoComStatusException extends RuntimeException {
     public NenhumVeiculoComStatusException(String message) {

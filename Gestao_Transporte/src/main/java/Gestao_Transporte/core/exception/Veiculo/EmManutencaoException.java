@@ -1,4 +1,4 @@
-package Gestao_Transporte.core.exception;
+package Gestao_Transporte.core.exception.Veiculo;
 
 public class EmManutencaoException extends RuntimeException {
     public EmManutencaoException(String message) {

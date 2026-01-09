@@ -1,4 +1,4 @@
-package Gestao_Transporte.core.exception;
+package Gestao_Transporte.core.exception.Motorista;
 
 public class CpfNaoEncontradoException extends RuntimeException {
     public CpfNaoEncontradoException(String message) {

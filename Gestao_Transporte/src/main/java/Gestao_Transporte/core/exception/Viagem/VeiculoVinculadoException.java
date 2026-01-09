@@ -1,4 +1,4 @@
-package Gestao_Transporte.core.exception;
+package Gestao_Transporte.core.exception.Viagem;
 
 public class VeiculoVinculadoException extends RuntimeException {
     public VeiculoVinculadoException(String message) {
