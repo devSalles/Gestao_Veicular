@@ -30,7 +30,7 @@ public class MotoristaController {
     }
 
     @PutMapping("/atualizar-motorista/{id}")
-    public ResponseEntity<?> atualizarMotorista(@PathVariable Long id, @RequestBody @Valid MotoristaUpdateDTO dto)
+    public ResponseEntity<?> atualizarMotorista(@PathVariable Long id,@Valid @RequestBody MotoristaUpdateDTO dto)
     {
         return ResponseEntity.ok(this.motoristaService.atualizarMotorista(id,dto));
     }

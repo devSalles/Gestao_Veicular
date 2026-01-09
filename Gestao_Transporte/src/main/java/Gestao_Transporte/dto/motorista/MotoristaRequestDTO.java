@@ -21,23 +21,25 @@ import org.hibernate.validator.constraints.br.CPF;
 @NoArgsConstructor
 public class MotoristaRequestDTO {
 
-    @NotNull(message = "Nome obrigatório") @NotBlank(message = "Nome obrigatório")
+    @NotBlank(message = "Nome obrigatório")
     private String nome;
 
-    @NotNull(message = "CPF obrigatório") @NotBlank(message = "CPF obrigatório")
-    @CPF(message = "Formato de CPF ou CPF inválido")
+    @NotBlank(message = "CPF obrigatório")
+    @CPF(message = "CPF inválido")
     private String cpf;
 
-    @NotNull(message = "CNH obrigatória") @NotBlank(message = "CNH obrigatória")
-    @Pattern(regexp = "^(\\d{11}|\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2})$")//Salvo com ou sem formatação
+    @NotBlank(message = "CNH obrigatória")
+    @Pattern(regexp = "^\\d{11}$", message = "CNH deve conter 11 dígitos")
     private String cnh;
 
-    @NotNull(message = "Categoria obrigatória") @Enumerated(EnumType.STRING)
+    @NotNull(message = "Categoria obrigatória")
+    @Enumerated(EnumType.STRING)
     private CategoriaCNH categoriaCNH;
 
-    @NotNull(message = "Status de motorista obrigatória")
+    @NotNull(message = "Status de motorista obrigatório")
     @Enumerated(EnumType.STRING)
     private StatusMotorista statusMotorista;
+
 
 
     public Motorista salvarMotorista()

@@ -6,6 +6,7 @@ import Gestao_Transporte.dto.viagem.IniciarViagemRequestDTO;
 import Gestao_Transporte.dto.viagem.AgendarViagemRequestDTO;
 import Gestao_Transporte.service.ViagemService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -21,19 +22,19 @@ public class ViagemController {
     private final ViagemService viagemService;
 
     @PostMapping("/agendar-viagem/motorista-id/{idMotorista}/veiculo-id/{idVeiculo}")
-    public ResponseEntity<?> agendarViagem(@RequestBody AgendarViagemRequestDTO dto, @PathVariable Long idMotorista, @PathVariable Long idVeiculo)
+    public ResponseEntity<?> agendarViagem(@Valid @RequestBody AgendarViagemRequestDTO dto, @PathVariable Long idMotorista, @PathVariable Long idVeiculo)
     {
         return ResponseEntity.ok(this.viagemService.agendarViagem(dto,idMotorista,idVeiculo));
     }
 
     @PostMapping("/iniciar-viagem/motorista-id/{idMotorista}/veiculo-id/{idVeiculo}")
-    public ResponseEntity<?> iniciarViagem(@RequestBody IniciarViagemRequestDTO dto, @PathVariable Long idMotorista, @PathVariable Long idVeiculo)
+    public ResponseEntity<?> iniciarViagem(@Valid @RequestBody  IniciarViagemRequestDTO dto, @PathVariable Long idMotorista, @PathVariable Long idVeiculo)
     {
         return ResponseEntity.ok(this.viagemService.iniciarViagem(dto,idMotorista,idVeiculo));
     }
 
     @PutMapping("/finalizar-viagem/{idViagem}")
-    public ResponseEntity<?> finalizarViagem(@PathVariable Long idViagem, @RequestBody FinalizarViagemDTO viagemDTO)
+    public ResponseEntity<?> finalizarViagem(@PathVariable Long idViagem,@Valid @RequestBody FinalizarViagemDTO viagemDTO)
     {
         return ResponseEntity.ok(this.viagemService.finalizarViagem(idViagem,viagemDTO.kmPercorrido()));
     }
