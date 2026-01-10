@@ -1,4 +1,4 @@
-package Gestao_Transporte.core.exception.Viagem;
+package Gestao_Transporte.core.exception.Veiculo;
 
 public class VeiculoIndisponivelException extends RuntimeException {
     public VeiculoIndisponivelException(String message) {

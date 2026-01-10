@@ -4,7 +4,7 @@ import Gestao_Transporte.Enum.StatusViagem;
 import Gestao_Transporte.Enum.motoristaEnum.StatusMotorista;
 import Gestao_Transporte.core.exception.*;
 import Gestao_Transporte.core.exception.Motorista.*;
-import Gestao_Transporte.core.exception.Viagem.VeiculoVinculadoException;
+import Gestao_Transporte.core.exception.Veiculo.VeiculoVinculadoException;
 import Gestao_Transporte.core.exception.Viagem.ViagemAtivaOuAgendadaException;
 import Gestao_Transporte.dto.motorista.MotoristaRequestDTO;
 import Gestao_Transporte.dto.motorista.MotoristaResponseDTO;

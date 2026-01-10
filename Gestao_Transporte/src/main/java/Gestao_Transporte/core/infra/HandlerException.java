@@ -2,10 +2,7 @@ package Gestao_Transporte.core.infra;
 
 import Gestao_Transporte.core.exception.*;
 import Gestao_Transporte.core.exception.Motorista.*;
-import Gestao_Transporte.core.exception.Veiculo.EmManutencaoException;
-import Gestao_Transporte.core.exception.Veiculo.NenhumVeiculoComStatusException;
-import Gestao_Transporte.core.exception.Veiculo.PlacaDuplicadaException;
-import Gestao_Transporte.core.exception.Veiculo.PlacaInexistenteException;
+import Gestao_Transporte.core.exception.Veiculo.*;
 import Gestao_Transporte.core.exception.Viagem.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

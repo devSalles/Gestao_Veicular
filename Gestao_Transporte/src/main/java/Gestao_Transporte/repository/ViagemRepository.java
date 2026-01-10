@@ -3,6 +3,7 @@ package Gestao_Transporte.repository;
 import Gestao_Transporte.Enum.StatusViagem;
 import Gestao_Transporte.entity.Viagem;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -27,4 +28,8 @@ public interface ViagemRepository extends JpaRepository<Viagem,Long> {
 
     //Verifica se o veiculo possui viagem ativa ou finalizada
     boolean existsByVeiculoIdAndStatusIn(Long id, List<StatusViagem> statusViagens);
+
+    @Query("SELECT COUNT(v) > 0 FROM Viagem v WHERE v.veiculo.id = :veiculoId AND v.status IN :status")
+    boolean veiculoOcupado(Long veiculoId, List<StatusViagem> status);
+
 }

@@ -4,6 +4,7 @@ import Gestao_Transporte.Enum.veiculoEnum.StatusVeiculo;
 import Gestao_Transporte.Enum.StatusViagem;
 import Gestao_Transporte.core.exception.*;
 import Gestao_Transporte.core.exception.Motorista.MotoristaIndisponivelException;
+import Gestao_Transporte.core.exception.Veiculo.VeiculoIndisponivelException;
 import Gestao_Transporte.core.exception.Viagem.KmInvalidoException;
 import Gestao_Transporte.core.exception.Viagem.ViagemJaFinalizadaException;
 import Gestao_Transporte.dto.viagem.IniciarViagemRequestDTO;
@@ -45,11 +46,22 @@ public class ViagemService {
             throw new DataException("Data de chegada não pode ser anterior que a data de saída");
         }
 
-        boolean motoristaAgendado = this.viagemRepository.existsByMotoristaIdAndStatusIn(motoristaID.getId(),
+        boolean motoristaOcupado = this.viagemRepository.existsByMotoristaIdAndStatusIn(motoristaID.getId(),
                 List.of(StatusViagem.AGENDADA,StatusViagem.EM_ANDAMENTO));
-        if(motoristaAgendado)
+        if(motoristaOcupado)
         {
-            throw new MotoristaIndisponivelException("Motorista já foi alocado em uma viagem agendada");
+            throw new MotoristaIndisponivelException("Motorista já foi alocado em uma viagem agendada ou já possui uma viagem em andamento");
+        }
+
+        boolean veiculoIndisponivel = this.viagemRepository.veiculoOcupado(veiculoID.getId(),List.of(StatusViagem.EM_ANDAMENTO,StatusViagem.AGENDADA));
+        if(veiculoIndisponivel)
+        {
+            throw new VeiculoIndisponivelException("Veículo Já está em uma viagem ou já possui uma viagem agendada");
+        }
+
+        if(!veiculoID.getStatus().equals(StatusVeiculo.DISPONIVEL))
+        {
+            throw new VeiculoIndisponivelException();
         }
 
         motoristaService.validarViagens(idMotorista,veiculoID);
@@ -74,11 +86,22 @@ public class ViagemService {
             throw new DataException("Data de saída não pode ser maior que data de chegada prevista");
         }
 
-        boolean motoristaEmViagem = this.viagemRepository.existsByMotoristaIdAndStatusIn(motoristaID.getId(),
+        boolean motoristaOcupado = this.viagemRepository.existsByMotoristaIdAndStatusIn(motoristaID.getId(),
                 List.of(StatusViagem.EM_ANDAMENTO,StatusViagem.AGENDADA));
-        if(motoristaEmViagem)
+        if(motoristaOcupado)
         {
-            throw new MotoristaIndisponivelException("Motorista já está em uma viagem em andamento ou em uma viagem agendada");
+            throw new MotoristaIndisponivelException("Motorista já está em uma viagem em andamento ou já possui uma viagem agendada");
+        }
+
+        boolean veiculoIndisponivel = this.viagemRepository.veiculoOcupado(veiculoID.getId(),List.of(StatusViagem.EM_ANDAMENTO,StatusViagem.AGENDADA));
+        if(veiculoIndisponivel)
+        {
+            throw new VeiculoIndisponivelException();
+        }
+
+        if (!veiculoID.getStatus().equals(StatusVeiculo.DISPONIVEL))
+        {
+            throw new VeiculoIndisponivelException("Veículo Já está em uma viagem ou já possui uma viagem agendada");
         }
 
         motoristaService.validarViagens(idMotorista,veiculoID);
