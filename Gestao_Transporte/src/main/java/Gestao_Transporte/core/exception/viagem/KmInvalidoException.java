@@ -1,4 +1,4 @@
-package Gestao_Transporte.core.exception.Viagem;
+package Gestao_Transporte.core.exception.viagem;
 
 public class KmInvalidoException extends RuntimeException {
     public KmInvalidoException(String message) {

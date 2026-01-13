@@ -1,4 +1,4 @@
-package Gestao_Transporte.core.exception.Veiculo;
+package Gestao_Transporte.core.exception.veiculo;
 
 public class PlacaInexistenteException extends RuntimeException {
     public PlacaInexistenteException(String message) {

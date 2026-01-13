@@ -1,4 +1,4 @@
-package Gestao_Transporte.core.exception.Viagem;
+package Gestao_Transporte.core.exception.viagem;
 
 public class ViagemAtivaOuAgendadaException extends RuntimeException {
     public ViagemAtivaOuAgendadaException(String message) {

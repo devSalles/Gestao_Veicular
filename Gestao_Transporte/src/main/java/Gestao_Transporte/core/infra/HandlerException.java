@@ -1,9 +1,9 @@
 package Gestao_Transporte.core.infra;
 
 import Gestao_Transporte.core.exception.*;
-import Gestao_Transporte.core.exception.Motorista.*;
-import Gestao_Transporte.core.exception.Veiculo.*;
-import Gestao_Transporte.core.exception.Viagem.*;
+import Gestao_Transporte.core.exception.motorista.*;
+import Gestao_Transporte.core.exception.veiculo.*;
+import Gestao_Transporte.core.exception.viagem.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;

@@ -1,4 +1,4 @@
-package Gestao_Transporte.Controller;
+package Gestao_Transporte.controller;
 
 import Gestao_Transporte.Enum.veiculoEnum.StatusVeiculo;
 import Gestao_Transporte.dto.veiculo.VeiculoRequestDTO;

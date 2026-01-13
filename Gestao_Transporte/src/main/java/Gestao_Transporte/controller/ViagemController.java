@@ -1,4 +1,4 @@
-package Gestao_Transporte.Controller;
+package Gestao_Transporte.controller;
 
 import Gestao_Transporte.Enum.StatusViagem;
 import Gestao_Transporte.dto.viagem.FinalizarViagemRequestDTO;

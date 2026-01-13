@@ -1,4 +1,4 @@
-package Gestao_Transporte.core.exception.Viagem;
+package Gestao_Transporte.core.exception.viagem;
 
 public class ViagemJaFinalizadaException extends RuntimeException {
     public ViagemJaFinalizadaException(String message) {

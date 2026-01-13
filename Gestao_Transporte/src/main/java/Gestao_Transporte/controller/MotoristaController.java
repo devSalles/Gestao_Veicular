@@ -1,4 +1,4 @@
-package Gestao_Transporte.Controller;
+package Gestao_Transporte.controller;
 
 import Gestao_Transporte.dto.motorista.MotoristaRequestDTO;
 import Gestao_Transporte.dto.motorista.MotoristaUpdateDTO;

@@ -1,4 +1,4 @@
-package Gestao_Transporte.core.exception.Motorista;
+package Gestao_Transporte.core.exception.motorista;
 
 public class CnhIncompativelException extends RuntimeException {
     public CnhIncompativelException(String message) {

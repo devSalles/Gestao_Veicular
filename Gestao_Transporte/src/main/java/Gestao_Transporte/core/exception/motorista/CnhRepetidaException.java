@@ -1,4 +1,4 @@
-package Gestao_Transporte.core.exception.Motorista;
+package Gestao_Transporte.core.exception.motorista;
 
 public class CnhRepetidaException extends RuntimeException {
     public CnhRepetidaException(String message) {super(message);}
