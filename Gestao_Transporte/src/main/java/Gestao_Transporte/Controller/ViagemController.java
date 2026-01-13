@@ -1,7 +1,7 @@
 package Gestao_Transporte.Controller;
 
 import Gestao_Transporte.Enum.StatusViagem;
-import Gestao_Transporte.dto.viagem.FinalizarViagemDTO;
+import Gestao_Transporte.dto.viagem.FinalizarViagemRequestDTO;
 import Gestao_Transporte.dto.viagem.IniciarViagemRequestDTO;
 import Gestao_Transporte.dto.viagem.AgendarViagemRequestDTO;
 import Gestao_Transporte.service.ViagemService;
@@ -34,7 +34,7 @@ public class ViagemController {
     }
 
     @PutMapping("/finalizar-viagem/{idViagem}")
-    public ResponseEntity<?> finalizarViagem(@PathVariable Long idViagem,@Valid @RequestBody FinalizarViagemDTO viagemDTO)
+    public ResponseEntity<?> finalizarViagem(@PathVariable Long idViagem,@Valid @RequestBody FinalizarViagemRequestDTO viagemDTO)
     {
         return ResponseEntity.ok(this.viagemService.finalizarViagem(idViagem,viagemDTO.kmPercorrido()));
     }

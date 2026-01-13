@@ -6,6 +6,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,7 +20,8 @@ import lombok.Setter;
 public class VeiculoRequestDTO {
 
     @NotNull(message = "Placa do veículo obrigatória") @NotBlank(message = "Placa do veículo obrigatória")
-//    @Pattern(regexp = "([A-Z]{3}[0-9]{4} | A-Z]{3}[0-9][A-Z][0-9]{2})",message = " formato de placa inválido") //placa salva sem formatação (modelo Mercosul e modelo antigo)
+    @Pattern(regexp = "([A-Z]{3}[0-9]{4}|[A-Z]{3}[0-9][A-Z][0-9]{2})", message = "Formato de placa inválido")
+    //placa salva sem formatação (modelo Mercosul e modelo antigo)
     private String placa; //salvo sem formatação
 
     @NotNull(message = "Marca do veículo obrigatória") @NotBlank(message = "Marca do veículo obrigatória")
