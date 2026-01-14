@@ -74,6 +74,11 @@ public class MotoristaService {
             throw new VeiculoVinculadoException();
         }
 
+        if(motoristaID.getStatusMotorista() == StatusMotorista.SUSPENSO ||motoristaID.getStatusMotorista() == StatusMotorista.INATIVO)
+        {
+            throw new MotoristaIndisponivelException("Motorista com status INATIVO ou SUSPENSO não pode ser vinculado ao veículo");
+        }
+
         motoristaID.getVeiculos().add(veiculo);
 
         return this.motoristaRepository.save(motoristaID);
