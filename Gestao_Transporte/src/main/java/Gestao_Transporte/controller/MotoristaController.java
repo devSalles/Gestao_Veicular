@@ -57,7 +57,6 @@ public class MotoristaController {
     @DeleteMapping("/excluir/{idMotorista}")
     public ResponseEntity<?> excluirMotorista(@PathVariable Long idMotorista)
     {
-        this.motoristaService.desativarMotorista(idMotorista);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(this.motoristaService.desativarMotorista(idMotorista));
     }
 }

@@ -8,7 +8,7 @@ import Gestao_Transporte.entity.Viagem;
 import java.time.LocalDateTime;
 
 //Classe usada para retornar no body em metodos GET
-public record ConsultasResponseDTO(
+public record ConsultasViagemResponseDTO(
         Long id,
         String origem,
         String destino,
@@ -21,8 +21,8 @@ public record ConsultasResponseDTO(
         VeiculoResponseDTO veiculoResponseDTO
 
 ) {
-    public static ConsultasResponseDTO fromViagem(Viagem viagem) {
-        return new ConsultasResponseDTO(viagem.getId(), viagem.getOrigem(), viagem.getDestino(), viagem.getDataSaida(),
+    public static ConsultasViagemResponseDTO fromViagem(Viagem viagem) {
+        return new ConsultasViagemResponseDTO(viagem.getId(), viagem.getOrigem(), viagem.getDestino(), viagem.getDataSaida(),
                 viagem.getDataChegadaReal(), viagem.getDataChegadaPrevista(), viagem.getKmPercorrido(), viagem.getStatus(),
                 viagem.getMotorista() != null ? MotoristaResponseDTO.fromMotorista(viagem.getMotorista()) : null,
                 viagem.getVeiculo() != null ? VeiculoResponseDTO.fromVeiculo(viagem.getVeiculo()) : null);

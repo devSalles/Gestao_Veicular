@@ -63,7 +63,6 @@ public class VeiculoController {
     @DeleteMapping("/desativar-veiculo/{idMotorista}")
     public ResponseEntity<?> desativarVeiculo(@PathVariable Long idMotorista)
     {
-        this.veiculoService.desativarVeiculo(idMotorista);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(this.veiculoService.desativarVeiculo(idMotorista));
     }
 }

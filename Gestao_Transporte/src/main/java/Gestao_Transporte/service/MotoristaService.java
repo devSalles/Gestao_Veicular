@@ -10,7 +10,6 @@ import Gestao_Transporte.dto.motorista.MotoristaRequestDTO;
 import Gestao_Transporte.dto.motorista.MotoristaResponseDTO;
 import Gestao_Transporte.dto.motorista.MotoristaUpdateDTO;
 import Gestao_Transporte.dto.motorista.VincularMotoristaDTO;
-import Gestao_Transporte.dto.veiculo.VeiculoResponseDTO;
 import Gestao_Transporte.entity.Motorista;
 import Gestao_Transporte.entity.Veiculo;
 import Gestao_Transporte.repository.MotoristaRepository;
@@ -116,7 +115,7 @@ public class MotoristaService {
     }
 
     @Transactional
-    public void desativarMotorista(Long id)
+    public MotoristaResponseDTO desativarMotorista(Long id)
     {
         Motorista motoristaID = buscarID(id);
 
@@ -128,6 +127,8 @@ public class MotoristaService {
 
         motoristaID.setStatusMotorista(StatusMotorista.INATIVO);
         this.motoristaRepository.save(motoristaID);
+
+        return MotoristaResponseDTO.fromMotorista(motoristaID);
     }
 
     //-------------- Metodos auxiliares --------------

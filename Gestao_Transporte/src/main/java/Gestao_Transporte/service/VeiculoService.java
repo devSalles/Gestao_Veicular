@@ -41,7 +41,7 @@ public class VeiculoService {
     }
 
     @Transactional
-    public Veiculo atualizarVeiculo(Long id , VeiculoUpdateDTO veiculoUpdateDTO)
+    public VeiculoResponseDTO atualizarVeiculo(Long id , VeiculoUpdateDTO veiculoUpdateDTO)
     {
         Veiculo veiculo = pesquisarID(id);
 
@@ -51,7 +51,9 @@ public class VeiculoService {
         }
 
         veiculoUpdateDTO.updateVeiculo(veiculo);
-        return this.veiculoRespoitory.save(veiculo);
+        this.veiculoRespoitory.save(veiculo);
+
+        return VeiculoResponseDTO.fromVeiculo(veiculo);
     }
 
     public List<VeiculoResponseDTO> mostrarTodos()
@@ -91,7 +93,7 @@ public class VeiculoService {
     }
 
     //metodo para colocar o veículo em manutenção
-    public Veiculo colocarEmManutencao(Long id)
+    public VeiculoResponseDTO colocarEmManutencao(Long id)
     {
         Veiculo veiculo = pesquisarID(id);
 
@@ -106,10 +108,12 @@ public class VeiculoService {
         }
 
         veiculo.setStatus(StatusVeiculo.MANUTENCAO);
-        return this.veiculoRespoitory.save(veiculo);
+        this.veiculoRespoitory.save(veiculo);
+
+        return VeiculoResponseDTO.fromVeiculo(veiculo);
     }
 
-    public Veiculo retiradaManutencao(Long id)
+    public VeiculoResponseDTO retiradaManutencao(Long id)
     {
         Veiculo veiculo = pesquisarID(id);
 
@@ -119,11 +123,13 @@ public class VeiculoService {
         }
 
         veiculo.setStatus(StatusVeiculo.DISPONIVEL);
-        return this.veiculoRespoitory.save(veiculo);
+        this.veiculoRespoitory.save(veiculo);
+
+        return VeiculoResponseDTO.fromVeiculo(veiculo);
     }
 
     @Transactional
-    public void desativarVeiculo(Long id)
+    public VeiculoResponseDTO desativarVeiculo(Long id)
     {
         Veiculo veiculo = pesquisarID(id);
 
@@ -135,6 +141,8 @@ public class VeiculoService {
 
         veiculo.setStatus(StatusVeiculo.INDISPONIVEL);
         this.veiculoRespoitory.save(veiculo);
+
+        return VeiculoResponseDTO.fromVeiculo(veiculo);
     }
 
     // -------- METODOS AUXILIARES --------

@@ -99,7 +99,6 @@ public class ViagemController {
     @DeleteMapping("/cancelar-viagem/{idViagem}")
     public ResponseEntity<?> cancelarViagem(@PathVariable Long idViagem)
     {
-        this.viagemService.cancelar(idViagem);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(this.viagemService.cancelar(idViagem));
     }
 }
