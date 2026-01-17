@@ -9,6 +9,8 @@ import Gestao_Transporte.core.exception.viagem.ViagemAtivaOuAgendadaException;
 import Gestao_Transporte.dto.motorista.MotoristaRequestDTO;
 import Gestao_Transporte.dto.motorista.MotoristaResponseDTO;
 import Gestao_Transporte.dto.motorista.MotoristaUpdateDTO;
+import Gestao_Transporte.dto.motorista.VincularMotoristaDTO;
+import Gestao_Transporte.dto.veiculo.VeiculoResponseDTO;
 import Gestao_Transporte.entity.Motorista;
 import Gestao_Transporte.entity.Veiculo;
 import Gestao_Transporte.repository.MotoristaRepository;
@@ -49,39 +51,44 @@ public class MotoristaService {
     }
 
     @Transactional
-    public Motorista atualizarMotorista(Long id, MotoristaUpdateDTO motoristaUpdateDTO)
+    public MotoristaResponseDTO atualizarMotorista(Long id, MotoristaUpdateDTO motoristaUpdateDTO)
     {
         Motorista motoristaID = buscarID(id);
 
         Motorista motoristaAtualizado = motoristaUpdateDTO.updateMotorista(motoristaID);
 
-        return this.motoristaRepository.save(motoristaAtualizado);
+        this.motoristaRepository.save(motoristaAtualizado);
+
+        return MotoristaResponseDTO.fromMotorista(motoristaID);
     }
 
+    //Metodo para vincular motorista a um veiculo
     @Transactional
-    public Motorista vincularVeiculo(Long idMotorista, Long idVeiculo)
+    public MotoristaResponseDTO vincularVeiculo(VincularMotoristaDTO dto)
     {
-        Motorista motoristaID = buscarID(idMotorista);
-        Veiculo veiculo = this.veiculoRespoitory.findById(idVeiculo).orElseThrow(()->new IdNaoEncontradoException("ID de veículo não encontrado"));
+        Motorista motoristaVincular = buscarID(dto.idMotorista());
+        Veiculo veiculoVinc = this.veiculoRespoitory.findById(dto.idVeiculo()).orElseThrow(()->new  IdNaoEncontradoException("ID de motorista não encontrado"));
 
-        if(!motoristaID.getCategoria().isCompativelCom(veiculo.getTipoVeiculo()))
+        if(!motoristaVincular.getCategoria().isCompativelCom(veiculoVinc.getTipoVeiculo()))
         {
             throw new CnhIncompativelException();
         }
 
-        if(motoristaID.getVeiculos().contains(veiculo))
+        if(motoristaVincular.getVeiculos().contains(veiculoVinc))
         {
             throw new VeiculoVinculadoException();
         }
 
-        if(motoristaID.getStatusMotorista() == StatusMotorista.SUSPENSO ||motoristaID.getStatusMotorista() == StatusMotorista.INATIVO)
+        if(motoristaVincular.getStatusMotorista() == StatusMotorista.SUSPENSO ||motoristaVincular.getStatusMotorista() == StatusMotorista.INATIVO)
         {
             throw new MotoristaIndisponivelException("Motorista com status INATIVO ou SUSPENSO não pode ser vinculado ao veículo");
         }
 
-        motoristaID.getVeiculos().add(veiculo);
+        motoristaVincular.getVeiculos().add(veiculoVinc);
+        veiculoVinc.getMotoristas().add(motoristaVincular);
 
-        return this.motoristaRepository.save(motoristaID);
+        this.veiculoRespoitory.save(veiculoVinc);
+        return MotoristaResponseDTO.fromMotorista(motoristaVincular);
     }
 
     public List<MotoristaResponseDTO> listarTodos()

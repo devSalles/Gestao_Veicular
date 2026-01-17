@@ -24,24 +24,6 @@ public class VeiculoController {
         return ResponseEntity.ok(this.veiculoService.salvarVeiculo(veiculoRequestDTO));
     }
 
-    @PostMapping("/vincular-veiculo/{idVeiculo}/motorista/{idMotorista}")
-    public ResponseEntity<?> vincularVeiculo(@PathVariable Long idVeiculo,@PathVariable Long idMotorista)
-    {
-        return ResponseEntity.ok(this.veiculoService.vincularVeiculo(idVeiculo,idMotorista));
-    }
-
-    @PostMapping("/iniciar-viagem/id-veiculo/{idVeiculo}/id-motorista/{idMotorista}")
-    public ResponseEntity<?> iniciarViagem(@PathVariable Long idVeiculo, @PathVariable Long idMotorista)
-    {
-        return ResponseEntity.ok(this.veiculoService.iniciarViagem(idVeiculo,idMotorista));
-    }
-
-    @PostMapping("/finalizar-viagem/{id}")
-    public ResponseEntity<?> finalizarViagem(@PathVariable Long id, @RequestParam(defaultValue = "false") boolean enviarParaManutencao)
-    {
-        return ResponseEntity.ok(this.veiculoService.finalizarViagem(id,enviarParaManutencao));
-    }
-
     @PutMapping("/atualizar-veiculo/{id}")
     public ResponseEntity<?> atualizar(@PathVariable Long id, @Valid @RequestBody VeiculoUpdateDTO veiculoUpdateDTO)
     {

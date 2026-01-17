@@ -41,6 +41,11 @@ public class ViagemService {
         Motorista motoristaID = this.motoristaRepository.findById(idMotorista).orElseThrow(()->new IdNaoEncontradoException("ID de motorista não encontrado"));
         Veiculo veiculoID = this.veiculoRespoitory.findById(idVeiculo).orElseThrow(() -> new IdNaoEncontradoException("ID de veículo não encontrado"));
 
+        if(dto.getDataSaida().isBefore(LocalDateTime.now()))
+        {
+            throw new DataException("Data de saída não pode ser no passado");
+        }
+
         if(dto.getDataChegadaPrevista().isBefore(dto.getDataSaida()))
         {
             throw new DataException("Data de chegada não pode ser anterior que a data de saída");
@@ -81,6 +86,11 @@ public class ViagemService {
         Motorista motoristaID = this.motoristaRepository.findById(idMotorista).orElseThrow(()->new IdNaoEncontradoException("ID de motorista não encontrado"));
         Veiculo veiculoID = this.veiculoRespoitory.findById(idVeiculo).orElseThrow(() -> new IdNaoEncontradoException("ID de veículo não encontrado"));
 
+        if(dto.getDataSaida().isBefore(LocalDateTime.now()))
+        {
+            throw new DataException("Data de saída não pode ser no passado");
+        }
+
         if(dto.getDataSaida().isAfter(dto.getDataChegadaPrevista()))
         {
             throw new DataException("Data de saída não pode ser maior que data de chegada prevista");
@@ -111,6 +121,9 @@ public class ViagemService {
         viagem.setVeiculo(veiculoID);
         viagem.setStatus(StatusViagem.EM_ANDAMENTO);
 
+        veiculoID.setStatus(StatusVeiculo.EM_VIAGEM);
+
+        this.veiculoRespoitory.save(veiculoID);
         this.viagemRepository.save(viagem);
 
         return ViagemResponseDTO.fromViagem(viagem);
@@ -162,7 +175,7 @@ public class ViagemService {
         List<Viagem>viagemList = this.viagemRepository.findAll();
         if(viagemList.isEmpty())
         {
-            throw new NenhumCadastroException("Nenhuma viagem cadastrada realizado");
+            throw new NenhumCadastroException("Nenhuma cadastrado de viagem  realizado");
         }
 
         return viagemList.stream().map(ConsultasResponseDTO::fromViagem).toList();
@@ -180,7 +193,7 @@ public class ViagemService {
 
         if(viagens.isEmpty())
         {
-            throw new IdNaoEncontradoException();
+            throw new IdNaoEncontradoException("ID de veículo não encontrado");
         }
 
         return viagens.stream().map(ConsultasResponseDTO::fromViagem).toList();
@@ -192,7 +205,7 @@ public class ViagemService {
 
         if(viagens.isEmpty())
         {
-            throw new IdNaoEncontradoException();
+            throw new IdNaoEncontradoException("ID de motorista não encontrado");
         }
 
         return viagens.stream().map(ConsultasResponseDTO::fromViagem).toList();
@@ -270,9 +283,10 @@ public class ViagemService {
         return viagens.stream().map(ConsultasResponseDTO::fromViagem).toList();
     }
 
+    @Transactional
     public void cancelar(Long id)
     {
-        Viagem viagemID = this.viagemRepository.findById(id).orElseThrow(()->new IdNaoEncontradoException("A viagem não encontrada"));
+        Viagem viagemID = this.viagemRepository.findById(id).orElseThrow(()->new IdNaoEncontradoException("ID de viagem não encontrada"));
 
         if(viagemID.getStatus() == StatusViagem.FINALIZADA)
         {

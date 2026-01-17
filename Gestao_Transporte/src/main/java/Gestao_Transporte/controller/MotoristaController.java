@@ -2,6 +2,7 @@ package Gestao_Transporte.controller;
 
 import Gestao_Transporte.dto.motorista.MotoristaRequestDTO;
 import Gestao_Transporte.dto.motorista.MotoristaUpdateDTO;
+import Gestao_Transporte.dto.motorista.VincularMotoristaDTO;
 import Gestao_Transporte.service.MotoristaService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -23,10 +24,10 @@ public class MotoristaController {
         return ResponseEntity.ok(this.motoristaService.salvarMotorista(motoristaRequestDTO));
     }
 
-    @PostMapping("/vincular-motorista-veiculo/{idMotorista}/{idVeiculo}")
-    public ResponseEntity<?> vincularMotorista(@PathVariable Long idMotorista, @PathVariable Long idVeiculo)
+    @PostMapping("/vincular-motorista-veiculo")
+    public ResponseEntity<?> vincularMotorista(@Valid @RequestBody VincularMotoristaDTO dto)
     {
-        return ResponseEntity.ok(this.motoristaService.vincularVeiculo(idMotorista,idVeiculo));
+        return ResponseEntity.ok(this.motoristaService.vincularVeiculo(dto));
     }
 
     @PutMapping("/atualizar-motorista/{id}")

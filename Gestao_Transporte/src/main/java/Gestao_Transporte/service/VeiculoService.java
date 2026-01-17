@@ -3,20 +3,9 @@ package Gestao_Transporte.service;
 import Gestao_Transporte.Enum.veiculoEnum.StatusVeiculo;
 import Gestao_Transporte.Enum.StatusViagem;
 import Gestao_Transporte.core.exception.*;
-import Gestao_Transporte.core.exception.motorista.CnhIncompativelException;
-import Gestao_Transporte.core.exception.veiculo.EmManutencaoException;
-import Gestao_Transporte.core.exception.veiculo.NenhumVeiculoComStatusException;
-import Gestao_Transporte.core.exception.veiculo.PlacaDuplicadaException;
-import Gestao_Transporte.core.exception.veiculo.PlacaInexistenteException;
-import Gestao_Transporte.core.exception.veiculo.VeiculoDisponivelException;
-import Gestao_Transporte.core.exception.veiculo.VeiculoEmViagemException;
-import Gestao_Transporte.core.exception.veiculo.VeiculoIndisponivelException;
+import Gestao_Transporte.core.exception.veiculo.*;
 import Gestao_Transporte.core.exception.viagem.ViagemAtivaOuAgendadaException;
-import Gestao_Transporte.dto.veiculo.VeiculoRequestDTO;
-import Gestao_Transporte.dto.veiculo.VeiculoResponseDTO;
-import Gestao_Transporte.dto.veiculo.VeiculoResponseStatusDTO;
-import Gestao_Transporte.dto.veiculo.VeiculoUpdateDTO;
-import Gestao_Transporte.entity.Motorista;
+import Gestao_Transporte.dto.veiculo.*;
 import Gestao_Transporte.entity.Veiculo;
 import Gestao_Transporte.repository.MotoristaRepository;
 import Gestao_Transporte.repository.VeiculoRespoitory;
@@ -63,20 +52,6 @@ public class VeiculoService {
 
         veiculoUpdateDTO.updateVeiculo(veiculo);
         return this.veiculoRespoitory.save(veiculo);
-    }
-
-    //Metodo para vincular motorista a um veiculo
-    @Transactional
-    public VeiculoResponseDTO vincularVeiculo(Long idVeiculo, Long idMotorista)
-    {
-        Veiculo veiculoVinc = pesquisarID(idVeiculo);
-        Motorista motoristaVincular = this.motoristaRepository.findById(idMotorista).orElseThrow(()->new  IdNaoEncontradoException("ID de motorista não encontrado"));
-
-        motoristaVincular.getVeiculos().add(veiculoVinc);
-        veiculoVinc.getMotoristas().add(motoristaVincular);
-
-        this.veiculoRespoitory.save(veiculoVinc);
-        return VeiculoResponseDTO.fromVeiculo(veiculoVinc);
     }
 
     public List<VeiculoResponseDTO> mostrarTodos()
@@ -144,51 +119,6 @@ public class VeiculoService {
         }
 
         veiculo.setStatus(StatusVeiculo.DISPONIVEL);
-        return this.veiculoRespoitory.save(veiculo);
-    }
-
-    public Veiculo iniciarViagem(Long idVeiculo, Long idMotorista)
-    {
-        Veiculo veiculo = pesquisarID(idVeiculo);
-        Motorista motorista = this.motoristaRepository.findById(idMotorista).orElseThrow(() -> new IdNaoEncontradoException("ID de motorista não encontrado"));
-
-        if(veiculo.getStatus()==StatusVeiculo.EM_VIAGEM)
-        {
-            throw new VeiculoEmViagemException("O veículo já está em viagem");
-        }
-
-        if(veiculo.getStatus() != StatusVeiculo.DISPONIVEL)
-        {
-            throw new VeiculoIndisponivelException();
-        }
-
-        if(!motorista.getCategoria().isCompativelCom(veiculo.getTipoVeiculo()))
-        {
-            throw new CnhIncompativelException();
-        }
-
-        veiculo.setStatus(StatusVeiculo.EM_VIAGEM);
-        return this.veiculoRespoitory.save(veiculo);
-    }
-
-    public Veiculo finalizarViagem(Long id,boolean enviarParaManutencao)
-    {
-        Veiculo veiculo = pesquisarID(id);
-
-        if(veiculo.getStatus()==StatusVeiculo.DISPONIVEL)
-        {
-            throw new VeiculoDisponivelException();
-        }
-
-        if(enviarParaManutencao)
-        {
-            veiculo.setStatus(StatusVeiculo.MANUTENCAO);
-        }
-        else
-        {
-            veiculo.setStatus(StatusVeiculo.DISPONIVEL);
-        }
-
         return this.veiculoRespoitory.save(veiculo);
     }
 
