@@ -25,14 +25,17 @@ public class IniciarViagemRequestDTO {
     @NotNull(message = "O destino e obrigatório") @NotBlank(message = "O destino e obrigatório")
     private String destino;
 
-    @NotNull(message = "A data de saída e obrigatória") @Past(message = "A data de saída não pode ser futura")
-    private LocalDateTime dataSaida;
-
     @NotNull(message = "A data de chegada prevista e obrigatória") @Future(message = "A data de chegada prevista deve ser no futuro")
     private LocalDateTime dataChegadaPrevista;
 
     @NotNull(message = "A quilometragem e obrigatória") @DecimalMin(value = "0.1",message = "o valor deve ser maior que 0.1Km")
     private Double kmPercorrido;
+
+    @NotNull(message = "ID de motorista obrigatório ") @Positive(message = "Valor não permitido")
+    private Long idMotorista;
+
+    @NotNull(message = "ID de veículo obrigatório ") @Positive(message = "Valor não permitido")
+    private Long idVeiculo;
 
     public Viagem toViagem(Motorista motorista, Veiculo veiculo)
     {
@@ -40,7 +43,6 @@ public class IniciarViagemRequestDTO {
 
         viagem.setOrigem(this.origem);
         viagem.setDestino(this.destino);
-        viagem.setDataSaida(this.dataSaida);
         viagem.setDataChegadaPrevista(this.dataChegadaPrevista);
         viagem.setKmPercorrido(this.kmPercorrido);
 

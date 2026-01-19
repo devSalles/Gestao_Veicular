@@ -36,10 +36,10 @@ public class ViagemService {
     private final MotoristaService motoristaService;
 
     @Transactional
-    public ViagemResponseDTO agendarViagem(AgendarViagemRequestDTO dto, Long idMotorista, Long idVeiculo)
+    public ViagemResponseDTO agendarViagem(AgendarViagemRequestDTO dto)
     {
-        Motorista motoristaID = this.motoristaRepository.findById(idMotorista).orElseThrow(()->new IdNaoEncontradoException("ID de motorista não encontrado"));
-        Veiculo veiculoID = this.veiculoRespoitory.findById(idVeiculo).orElseThrow(() -> new IdNaoEncontradoException("ID de veículo não encontrado"));
+        Motorista motoristaID = this.motoristaRepository.findById(dto.getIdMotorista()).orElseThrow(()->new IdNaoEncontradoException("ID de motorista não encontrado"));
+        Veiculo veiculoID = this.veiculoRespoitory.findById(dto.getIdVeiculo()).orElseThrow(() -> new IdNaoEncontradoException("ID de veículo não encontrado"));
 
         if(dto.getDataSaida().isBefore(LocalDateTime.now()))
         {
@@ -69,7 +69,7 @@ public class ViagemService {
             throw new VeiculoIndisponivelException();
         }
 
-        motoristaService.validarViagens(idMotorista,veiculoID);
+        motoristaService.validarViagens(dto.getIdMotorista(),veiculoID);
 
         Viagem viagem = dto.toViagem(motoristaID,veiculoID);
         viagem.setVeiculo(veiculoID);
@@ -81,20 +81,10 @@ public class ViagemService {
     }
 
     @Transactional
-    public ViagemResponseDTO iniciarViagem(IniciarViagemRequestDTO dto, Long idMotorista, Long idVeiculo)
+    public ViagemResponseDTO iniciarViagem(IniciarViagemRequestDTO dto)
     {
-        Motorista motoristaID = this.motoristaRepository.findById(idMotorista).orElseThrow(()->new IdNaoEncontradoException("ID de motorista não encontrado"));
-        Veiculo veiculoID = this.veiculoRespoitory.findById(idVeiculo).orElseThrow(() -> new IdNaoEncontradoException("ID de veículo não encontrado"));
-
-        if(dto.getDataSaida().isBefore(LocalDateTime.now()))
-        {
-            throw new DataException("Data de saída não pode ser no passado");
-        }
-
-        if(dto.getDataSaida().isAfter(dto.getDataChegadaPrevista()))
-        {
-            throw new DataException("Data de saída não pode ser maior que data de chegada prevista");
-        }
+        Motorista motoristaID = this.motoristaRepository.findById(dto.getIdMotorista()).orElseThrow(()->new IdNaoEncontradoException("ID de motorista não encontrado"));
+        Veiculo veiculoID = this.veiculoRespoitory.findById(dto.getIdVeiculo()).orElseThrow(() -> new IdNaoEncontradoException("ID de veículo não encontrado"));
 
         boolean motoristaOcupado = this.viagemRepository.existsByMotoristaIdAndStatusIn(motoristaID.getId(),
                 List.of(StatusViagem.EM_ANDAMENTO,StatusViagem.AGENDADA));
@@ -114,12 +104,13 @@ public class ViagemService {
             throw new VeiculoIndisponivelException("Veículo Já está em uma viagem ou já possui uma viagem agendada");
         }
 
-        motoristaService.validarViagens(idMotorista,veiculoID);
+        motoristaService.validarViagens(dto.getIdMotorista(), veiculoID);
 
         Viagem viagem = dto.toViagem(motoristaID,veiculoID);
         viagem.setMotorista(motoristaID);
         viagem.setVeiculo(veiculoID);
         viagem.setStatus(StatusViagem.EM_ANDAMENTO);
+        viagem.setDataSaida(LocalDateTime.now());
 
         veiculoID.setStatus(StatusVeiculo.EM_VIAGEM);
 

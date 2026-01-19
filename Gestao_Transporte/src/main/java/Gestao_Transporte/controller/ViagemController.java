@@ -21,16 +21,16 @@ public class ViagemController {
 
     private final ViagemService viagemService;
 
-    @PostMapping("/agendar-viagem/motorista-id/{idMotorista}/veiculo-id/{idVeiculo}")
-    public ResponseEntity<?> agendarViagem(@Valid @RequestBody AgendarViagemRequestDTO dto, @PathVariable Long idMotorista, @PathVariable Long idVeiculo)
+    @PostMapping("/agendar-viagem")
+    public ResponseEntity<?> agendarViagem(@Valid @RequestBody AgendarViagemRequestDTO dto)
     {
-        return ResponseEntity.ok(this.viagemService.agendarViagem(dto,idMotorista,idVeiculo));
+        return ResponseEntity.ok(this.viagemService.agendarViagem(dto));
     }
 
-    @PostMapping("/iniciar-viagem/motorista-id/{idMotorista}/veiculo-id/{idVeiculo}")
-    public ResponseEntity<?> iniciarViagem(@Valid @RequestBody  IniciarViagemRequestDTO dto, @PathVariable Long idMotorista, @PathVariable Long idVeiculo)
+    @PostMapping("/iniciar-viagem")
+    public ResponseEntity<?> iniciarViagem(@Valid @RequestBody  IniciarViagemRequestDTO dto)
     {
-        return ResponseEntity.ok(this.viagemService.iniciarViagem(dto,idMotorista,idVeiculo));
+        return ResponseEntity.ok(this.viagemService.iniciarViagem(dto));
     }
 
     @PutMapping("/finalizar-viagem/{idViagem}")
