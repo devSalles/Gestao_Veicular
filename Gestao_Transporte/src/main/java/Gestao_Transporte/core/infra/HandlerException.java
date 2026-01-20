@@ -183,4 +183,11 @@ public class HandlerException {
         MessageRestError messageRestError = new MessageRestError(HttpStatus.BAD_REQUEST,ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageRestError);
     }
+
+    @ExceptionHandler(ViagemEmAndamentoException.class)
+    public ResponseEntity<MessageRestError> ViagemEmAndamentoException(ViagemEmAndamentoException ex)
+    {
+        MessageRestError messageRestError = new MessageRestError(HttpStatus.BAD_REQUEST,ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageRestError);
+    }
 }

@@ -6,6 +6,7 @@ import Gestao_Transporte.core.exception.*;
 import Gestao_Transporte.core.exception.motorista.MotoristaIndisponivelException;
 import Gestao_Transporte.core.exception.veiculo.VeiculoIndisponivelException;
 import Gestao_Transporte.core.exception.viagem.KmInvalidoException;
+import Gestao_Transporte.core.exception.viagem.ViagemEmAndamentoException;
 import Gestao_Transporte.core.exception.viagem.ViagemJaFinalizadaException;
 import Gestao_Transporte.dto.viagem.IniciarViagemRequestDTO;
 import Gestao_Transporte.dto.viagem.AgendarViagemRequestDTO;
@@ -130,6 +131,11 @@ public class ViagemService {
             throw new ViagemJaFinalizadaException();
         }
 
+        if(viagemID.getStatus() != StatusViagem.EM_ANDAMENTO)
+        {
+            throw new ViagemEmAndamentoException();
+        }
+
         if(distanciaPercorrida<0)
         {
             throw new KmInvalidoException();
@@ -216,7 +222,7 @@ public class ViagemService {
 
     public List<ConsultasViagemResponseDTO> consultarDataEntreSaida(LocalDate inicio, LocalDate fim)
     {
-        if(fim.isAfter(inicio))
+        if(fim.isBefore(inicio))
         {
             throw new DataException();
         }
@@ -236,7 +242,7 @@ public class ViagemService {
 
     public List<ConsultasViagemResponseDTO> consultarDataEntreChegadaPrevista(LocalDate inicio, LocalDate fim)
     {
-        if(fim.isAfter(inicio))
+        if(fim.isBefore(inicio))
         {
             throw new DataException();
         }
@@ -256,7 +262,7 @@ public class ViagemService {
 
     public List<ConsultasViagemResponseDTO> consultarDataEntreChegadaReal(LocalDate inicio, LocalDate fim)
     {
-        if(fim.isAfter(inicio))
+        if(fim.isBefore(inicio))
         {
             throw new DataException();
         }
@@ -282,6 +288,13 @@ public class ViagemService {
         if(viagemID.getStatus() == StatusViagem.FINALIZADA)
         {
             throw new ViagemJaFinalizadaException();
+        }
+
+        if(viagemID.getStatus() == StatusViagem.EM_ANDAMENTO)
+        {
+            Veiculo veiculo = viagemID.getVeiculo();
+            veiculo.setStatus(StatusVeiculo.DISPONIVEL);
+            this.veiculoRespoitory.save(veiculo);
         }
 
         viagemID.setStatus(StatusViagem.CANCELADA);

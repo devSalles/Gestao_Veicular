@@ -62,7 +62,7 @@ public class VeiculoService {
 
         if(veiculos.isEmpty())
         {
-            throw new RuntimeException("Nenhum veículo cadastrado");
+            throw new NenhumCadastroException("Nenhum veículo cadastrado");
         }
 
         return veiculos.stream().map(VeiculoResponseDTO::fromVeiculo).toList();
@@ -133,7 +133,7 @@ public class VeiculoService {
     {
         Veiculo veiculo = pesquisarID(id);
 
-        boolean possuiViagensAtivasOuFinalizadas = this.viagemRepository.existsByVeiculoIdAndStatusIn(id,List.of(StatusViagem.FINALIZADA,StatusViagem.EM_ANDAMENTO));
+        boolean possuiViagensAtivasOuFinalizadas = this.viagemRepository.existsByVeiculoIdAndStatusIn(id,List.of(StatusViagem.AGENDADA,StatusViagem.EM_ANDAMENTO));
         if(possuiViagensAtivasOuFinalizadas)
         {
             throw new ViagemAtivaOuAgendadaException();

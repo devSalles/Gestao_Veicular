@@ -38,10 +38,12 @@ public class Veiculo {
     @Column(nullable = false)
     private Integer ano;
 
-    @Column(nullable = false) @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private TipoVeiculo tipoVeiculo;
 
-    @Column(nullable = false) @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private StatusVeiculo status;
 
     @Override
