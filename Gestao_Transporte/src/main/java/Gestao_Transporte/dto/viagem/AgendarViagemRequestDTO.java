@@ -27,7 +27,7 @@ public class AgendarViagemRequestDTO {
     @NotNull(message = "A data de saída e obrigatória")
     private LocalDateTime dataSaida;
 
-    @NotNull(message = "A data de chegada prevista e obrigatória") @Future(message = "A data de chegada prevista deve ser no futuro")
+    @NotNull(message = "A data de chegada prevista e obrigatória") @FutureOrPresent(message = "A data de chegada prevista deve ser no futuro")
     private LocalDateTime dataChegadaPrevista;
 
     @NotNull(message = "A quilometragem e obrigatória") @DecimalMin(value = "0.1",message = "o valor deve ser maior que 0.1Km")

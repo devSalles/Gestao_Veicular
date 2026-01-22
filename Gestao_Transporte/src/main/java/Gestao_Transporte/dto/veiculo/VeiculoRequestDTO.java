@@ -22,7 +22,7 @@ public class VeiculoRequestDTO {
     @NotNull(message = "Placa do veículo obrigatória") @NotBlank(message = "Placa do veículo obrigatória")
     @Pattern(regexp = "([A-Z]{3}[0-9]{4}|[A-Z]{3}[0-9][A-Z][0-9]{2})", message = "Formato de placa inválido")
     //placa salva sem formatação (modelo Mercosul e modelo antigo)
-    private String placa; //salvo sem formatação
+    private String placa;
 
     @NotNull(message = "Marca do veículo obrigatória") @NotBlank(message = "Marca do veículo obrigatória")
     private String marca;
