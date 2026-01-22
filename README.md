@@ -93,6 +93,29 @@ Exemplo de requisição JSON:
   - Veículo retorna para `DISPONÍVEL`
 - Cancelamento permitido se não finalizada
 
+Agendar Viagem:
+```json
+{
+  "origem": "São Paulo - SP",
+  "destino": "Campinas - SP",
+  "dataSaida": "2026-02-10T08:00:00",
+  "dataChegadaPrevista": "2026-02-10T11:00:00",
+  "kmPercorrido": 95.5,
+  "idMotorista": 1,
+  "idVeiculo": 1
+}
+```
+Iniciar Viagem (Antes de iniciar uma viagem, cancele a viagem agendada)
+```json
+{
+  "origem": "São Paulo - SP",
+  "destino": "Campinas - SP",
+  "dataChegadaPrevista": "2026-01-22T15:06:52.086Z",
+  "kmPercorrido": 0.1,
+  "idMotorista": 1,
+  "idVeiculo": 1
+}
+```
 ---
 
 ## ⚠️ Regras Gerais
