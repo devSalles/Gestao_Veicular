@@ -43,6 +43,7 @@ public class MotoristaService {
         }
 
         Motorista motorista = motoristaRequestDTO.salvarMotorista();
+        motorista.setStatusMotorista(StatusMotorista.ATIVO);
 
         this.motoristaRepository.save(motorista);
 

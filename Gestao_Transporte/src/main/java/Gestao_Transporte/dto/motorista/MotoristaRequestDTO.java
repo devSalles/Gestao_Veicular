@@ -36,12 +36,6 @@ public class MotoristaRequestDTO {
     @Enumerated(EnumType.STRING)
     private CategoriaCNH categoriaCNH;
 
-    @NotNull(message = "Status de motorista obrigatório")
-    @Enumerated(EnumType.STRING)
-    private StatusMotorista statusMotorista;
-
-
-
     public Motorista salvarMotorista()
     {
         Motorista motorista = new Motorista();
@@ -50,7 +44,6 @@ public class MotoristaRequestDTO {
         motorista.setCpf(this.cpf);
         motorista.setCnh(this.cnh);
         motorista.setCategoria(this.categoriaCNH);
-        motorista.setStatusMotorista(this.statusMotorista);
 
         return motorista;
     }
