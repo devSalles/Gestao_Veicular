@@ -37,6 +37,16 @@ O projeto foi construído com foco em **boas práticas**, **integridade dos dado
 - Apenas veículos `DISPONÍVEL` podem iniciar viagens
 - Alteração automática de status
 
+```json
+{
+  "placa": "BRT2A23",
+  "marca": "Mercedes-Benz",
+  "modelo": "Actros 2651",
+  "ano": 2022,
+  "tipoVeiculo": "CAMINHAO"
+}
+```
+
 ---
 
 ### 👨‍✈️ Motorista
