@@ -65,9 +65,9 @@ Exemplo de requisição JSON:
 ```json
 {
   "nome": "João da Silva",
-  "cpf": "780.923.350-52",
-  "cnh": "98765432101",
-  "categoriaCNH": "D"
+  "cpf": "962.258.930-83",
+  "cnh": "98152432101",
+  "categoriaCNH": "C"
 }
 ```
 ---
