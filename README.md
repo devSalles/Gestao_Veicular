@@ -18,7 +18,7 @@ O projeto foi construído com foco em **boas práticas**, **integridade dos dado
 - Lombok
 - Swagger / OpenAPI
 - Maven
-- Banco de Dados Relacional (MySQL / PostgreSQL / H2)
+- Banco de Dados Relacional (MySQL)
 
 ---
 
