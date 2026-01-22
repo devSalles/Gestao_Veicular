@@ -50,6 +50,16 @@ O projeto foi construído com foco em **boas práticas**, **integridade dos dado
 - Deve possuir CNH compatível com o veículo
 - Não pode ser excluído se possuir viagens em andamento ou agendadas
 
+Exemplo de requisição JSON:
+
+```json
+{
+  "nome": "João da Silva",
+  "cpf": "780.923.350-52",
+  "cnh": "98765432101",
+  "categoriaCNH": "D"
+}
+```
 ---
 
 ### 🧭 Viagem
