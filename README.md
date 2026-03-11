@@ -18,7 +18,7 @@ O projeto foi construído com foco em **boas práticas**, **integridade dos dado
 - Lombok
 - Swagger / OpenAPI
 - Maven
-- Banco de Dados Relacional (MySQL / PostgreSQL / H2)
+- Banco de Dados Relacional (MySQL)
 
 ---
 
@@ -37,6 +37,16 @@ O projeto foi construído com foco em **boas práticas**, **integridade dos dado
 - Apenas veículos `DISPONÍVEL` podem iniciar viagens
 - Alteração automática de status
 
+```json
+{
+  "placa": "BRT2A23",
+  "marca": "Mercedes-Benz",
+  "modelo": "Actros 2651",
+  "ano": 2022,
+  "tipoVeiculo": "CAMINHAO"
+}
+```
+
 ---
 
 ### 👨‍✈️ Motorista
@@ -50,6 +60,16 @@ O projeto foi construído com foco em **boas práticas**, **integridade dos dado
 - Deve possuir CNH compatível com o veículo
 - Não pode ser excluído se possuir viagens em andamento ou agendadas
 
+Exemplo de requisição JSON:
+
+```json
+{
+  "nome": "João da Silva",
+  "cpf": "962.258.930-83",
+  "cnh": "98152432101",
+  "categoriaCNH": "C"
+}
+```
 ---
 
 ### 🧭 Viagem
@@ -73,6 +93,29 @@ O projeto foi construído com foco em **boas práticas**, **integridade dos dado
   - Veículo retorna para `DISPONÍVEL`
 - Cancelamento permitido se não finalizada
 
+Agendar Viagem:
+```json
+{
+  "origem": "São Paulo - SP",
+  "destino": "Campinas - SP",
+  "dataSaida": "2026-02-10T08:00:00",
+  "dataChegadaPrevista": "2026-02-10T11:00:00",
+  "kmPercorrido": 95.5,
+  "idMotorista": 1,
+  "idVeiculo": 1
+}
+```
+Iniciar Viagem (Antes de iniciar uma viagem, cancele a viagem agendada)
+```json
+{
+  "origem": "São Paulo - SP",
+  "destino": "Campinas - SP",
+  "dataChegadaPrevista": "2026-01-22T15:06:52.086Z",
+  "kmPercorrido": 0.1,
+  "idMotorista": 1,
+  "idVeiculo": 1
+}
+```
 ---
 
 ## ⚠️ Regras Gerais
