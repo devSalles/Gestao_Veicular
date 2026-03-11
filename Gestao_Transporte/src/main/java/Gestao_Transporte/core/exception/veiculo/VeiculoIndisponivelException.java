@@ -5,6 +5,6 @@ public class VeiculoIndisponivelException extends RuntimeException {
         super(message);
     }
     public VeiculoIndisponivelException() {
-        super("Veículo não está disponível para viagem");
+        super("Veículo não está disponível para viagem ou já está em viagem");
     }
 }

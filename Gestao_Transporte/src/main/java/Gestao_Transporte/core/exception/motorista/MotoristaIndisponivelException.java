@@ -5,6 +5,6 @@ public class MotoristaIndisponivelException extends RuntimeException {
         super(message);
     }
     public MotoristaIndisponivelException() {
-        super("Motorista não está com status ativo para iniciar viagem");
+        super("Motorista já está em viagem ou está indisponível");
     }
 }

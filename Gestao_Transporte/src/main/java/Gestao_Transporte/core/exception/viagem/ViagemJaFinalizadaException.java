@@ -5,6 +5,6 @@ public class ViagemJaFinalizadaException extends RuntimeException {
         super(message);
     }
     public ViagemJaFinalizadaException() {
-        super("Viagem não pode ser finalizada pois está finalizada");
+        super("Viagem já foi finalizada");
     }
 }
