@@ -1,5 +1,6 @@
 package Gestao_Transporte.service;
 
+import Gestao_Transporte.Enum.motoristaEnum.StatusMotorista;
 import Gestao_Transporte.Enum.veiculoEnum.StatusVeiculo;
 import Gestao_Transporte.Enum.StatusViagem;
 import Gestao_Transporte.core.exception.*;
@@ -8,7 +9,6 @@ import Gestao_Transporte.core.exception.veiculo.VeiculoIndisponivelException;
 import Gestao_Transporte.core.exception.viagem.KmInvalidoException;
 import Gestao_Transporte.core.exception.viagem.ViagemEmAndamentoException;
 import Gestao_Transporte.core.exception.viagem.ViagemJaFinalizadaException;
-import Gestao_Transporte.dto.viagem.IniciarViagemRequestDTO;
 import Gestao_Transporte.dto.viagem.AgendarViagemRequestDTO;
 import Gestao_Transporte.dto.viagem.ConsultasViagemResponseDTO;
 import Gestao_Transporte.dto.viagem.ViagemResponseDTO;
@@ -82,40 +82,32 @@ public class ViagemService {
     }
 
     @Transactional
-    public ViagemResponseDTO iniciarViagem(IniciarViagemRequestDTO dto)
+    public ViagemResponseDTO iniciarViagem(Long idViagem)
     {
-        Motorista motoristaID = this.motoristaRepository.findById(dto.getIdMotorista()).orElseThrow(()->new IdNaoEncontradoException("ID de motorista não encontrado"));
-        Veiculo veiculoID = this.veiculoRespoitory.findById(dto.getIdVeiculo()).orElseThrow(() -> new IdNaoEncontradoException("ID de veículo não encontrado"));
+        Viagem viagem = this.viagemRepository.findById(idViagem).orElseThrow(()-> new IdNaoEncontradoException("Id de viagem não encontrado"));
 
-        boolean motoristaOcupado = this.viagemRepository.existsByMotoristaIdAndStatusIn(motoristaID.getId(),
-                List.of(StatusViagem.EM_ANDAMENTO,StatusViagem.AGENDADA));
-        if(motoristaOcupado)
+        //Metodo responsável por validar viagens
+        validarViagem(viagem);
+
+        Motorista motorista = viagem.getMotorista();
+        Veiculo veiculo = viagem.getVeiculo();
+
+        if(!motorista.getStatusMotorista().equals(StatusMotorista.ATIVO))
         {
-            throw new MotoristaIndisponivelException("Motorista já está em uma viagem em andamento ou já possui uma viagem agendada");
+            throw new MotoristaIndisponivelException();
         }
 
-        boolean veiculoIndisponivel = this.viagemRepository.veiculoOcupado(veiculoID.getId(),List.of(StatusViagem.EM_ANDAMENTO,StatusViagem.AGENDADA));
-        if(veiculoIndisponivel)
+        if(!veiculo.getStatus().equals(StatusVeiculo.DISPONIVEL))
         {
             throw new VeiculoIndisponivelException();
         }
 
-        if (!veiculoID.getStatus().equals(StatusVeiculo.DISPONIVEL))
-        {
-            throw new VeiculoIndisponivelException("Veículo Já está em uma viagem ou já possui uma viagem agendada");
-        }
-
-        motoristaService.validarViagens(dto.getIdMotorista(), veiculoID);
-
-        Viagem viagem = dto.toViagem(motoristaID,veiculoID);
-        viagem.setMotorista(motoristaID);
-        viagem.setVeiculo(veiculoID);
         viagem.setStatus(StatusViagem.EM_ANDAMENTO);
         viagem.setDataSaida(LocalDateTime.now());
 
-        veiculoID.setStatus(StatusVeiculo.EM_VIAGEM);
+        veiculo.setStatus(StatusVeiculo.EM_VIAGEM);
 
-        this.veiculoRespoitory.save(veiculoID);
+        this.veiculoRespoitory.save(veiculo);
         this.viagemRepository.save(viagem);
 
         return ViagemResponseDTO.fromViagem(viagem);
@@ -145,9 +137,7 @@ public class ViagemService {
         viagemID.setDataChegadaReal(chegadaReal);
 
         LocalDateTime chegadaPrevista = viagemID.getDataChegadaPrevista();
-
         boolean houveAtrasos = chegadaReal.isAfter(chegadaPrevista);
-
         if(houveAtrasos)
         {
             long atrasoMinutos = Duration.between(chegadaPrevista,chegadaReal).toMinutes();
@@ -270,7 +260,7 @@ public class ViagemService {
         LocalDateTime dataInicioFormatada = inicio.atStartOfDay();
         LocalDateTime dataFinalFormata = fim.atTime(LocalTime.MAX);
 
-        List<Viagem> viagens = this.viagemRepository.findByDataChegadaRealBetween(dataInicioFormatada,dataFinalFormata);
+        List<Viagem> viagens = this.viagemRepository.  findByDataChegadaRealBetween(dataInicioFormatada,dataFinalFormata);
 
         if(viagens.isEmpty())
         {
@@ -301,5 +291,25 @@ public class ViagemService {
         this.viagemRepository.save(viagemID);
 
         return ViagemResponseDTO.fromViagem(viagemID);
+    }
+
+    //------------
+
+    public void validarViagem(Viagem viagem)
+    {
+        if(viagem.getStatus() == StatusViagem.FINALIZADA)
+        {
+            throw new ViagemJaFinalizadaException();
+        }
+
+        if(viagem.getStatus() == StatusViagem.EM_ANDAMENTO)
+        {
+            throw new ViagemEmAndamentoException();
+        }
+
+        if(viagem.getStatus() != StatusViagem.AGENDADA)
+        {
+            throw new ViagemJaFinalizadaException();
+        }
     }
 }

@@ -2,7 +2,6 @@ package Gestao_Transporte.controller;
 
 import Gestao_Transporte.Enum.StatusViagem;
 import Gestao_Transporte.dto.viagem.FinalizarViagemRequestDTO;
-import Gestao_Transporte.dto.viagem.IniciarViagemRequestDTO;
 import Gestao_Transporte.dto.viagem.AgendarViagemRequestDTO;
 import Gestao_Transporte.service.ViagemService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,10 +26,10 @@ public class ViagemController {
         return ResponseEntity.ok(this.viagemService.agendarViagem(dto));
     }
 
-    @PostMapping("/iniciar-viagem")
-    public ResponseEntity<?> iniciarViagem(@Valid @RequestBody  IniciarViagemRequestDTO dto)
+    @PutMapping("/iniciar-viagem/{id}")
+    public ResponseEntity<?> iniciarViagens(@PathVariable Long id)
     {
-        return ResponseEntity.ok(this.viagemService.iniciarViagem(dto));
+        return ResponseEntity.ok(this.viagemService.iniciarViagem(id));
     }
 
     @PutMapping("/finalizar-viagem/{idViagem}")
