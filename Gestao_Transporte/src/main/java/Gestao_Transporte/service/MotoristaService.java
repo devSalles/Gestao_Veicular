@@ -32,17 +32,19 @@ public class MotoristaService {
     @Transactional
     public MotoristaResponseDTO salvarMotorista(MotoristaRequestDTO motoristaRequestDTO)
     {
+        String cpfFormatado = formatarCPF(motoristaRequestDTO.getCpf());
         if(this.motoristaRepository.existsByCnh(motoristaRequestDTO.getCnh()))
         {
             throw new CnhRepetidaException();
         }
 
-        if(this.motoristaRepository.existsByCpf(motoristaRequestDTO.getCpf()))
+        if(this.motoristaRepository.existsByCpf(cpfFormatado))
         {
             throw new CpfRepetidoException();
         }
 
         Motorista motorista = motoristaRequestDTO.salvarMotorista();
+        motorista.setCpf(cpfFormatado);
         motorista.setStatusMotorista(StatusMotorista.ATIVO);
 
         this.motoristaRepository.save(motorista);
@@ -111,7 +113,8 @@ public class MotoristaService {
 
     public MotoristaResponseDTO exibirPorCPF(String cpf)
     {
-        Motorista motoristaCpf = buscarCPF(cpf);
+        String cpfFormatado = formatarCPF(cpf);
+        Motorista motoristaCpf = buscarCPF(cpfFormatado);
         return MotoristaResponseDTO.fromMotorista(motoristaCpf);
     }
 
@@ -132,12 +135,13 @@ public class MotoristaService {
         return MotoristaResponseDTO.fromMotorista(motoristaID);
     }
 
-    //-------------- Metodos auxiliares --------------
+    //-------------- METODOS AUXILIARES --------------
 
     //Metodo responsável po realizar busca por CPF
-    public Motorista buscarCPF(String cpf)
+    private Motorista buscarCPF(String cpf)
     {
-        Motorista motoristaCPF = this.motoristaRepository.findByCpf(cpf);
+        String cpfFormatado = formatarCPF(cpf);
+        Motorista motoristaCPF = this.motoristaRepository.findByCpf(cpfFormatado);
         if(motoristaCPF == null)
         {
             throw new CpfNaoEncontradoException();
@@ -166,6 +170,12 @@ public class MotoristaService {
     public Motorista buscarID(Long id)
     {
         return this.motoristaRepository.findById(id).orElseThrow(()->new IdNaoEncontradoException("ID de motorista não encontrado"));
+    }
+
+    //Metodo responsável por formatar CPF
+    private String formatarCPF(String cpf)
+    {
+        return cpf.replaceAll("\\D","");
     }
 
 }
