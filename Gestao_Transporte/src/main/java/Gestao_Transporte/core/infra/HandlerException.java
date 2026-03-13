@@ -190,4 +190,11 @@ public class HandlerException {
         MessageRestError messageRestError = new MessageRestError(HttpStatus.BAD_REQUEST,ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageRestError);
     }
+
+    @ExceptionHandler(ViagemCanceladaException.class)
+    public ResponseEntity<MessageRestError> ViagemCanceladaException(ViagemCanceladaException ex)
+    {
+        MessageRestError messageRestError = new MessageRestError(HttpStatus.BAD_REQUEST,ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageRestError);
+    }
 }
