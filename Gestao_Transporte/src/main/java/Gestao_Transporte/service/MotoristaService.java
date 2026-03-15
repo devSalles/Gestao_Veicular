@@ -69,7 +69,7 @@ public class MotoristaService {
     public MotoristaResponseDTO vincularVeiculo(VincularMotoristaDTO dto)
     {
         Motorista motoristaVinc = buscarID(dto.idMotorista());
-        Veiculo veiculoVinc = this.veiculoRespoitory.findById(dto.idVeiculo()).orElseThrow(()->new  IdNaoEncontradoException("ID de motorista não encontrado"));
+        Veiculo veiculoVinc = this.veiculoRespoitory.findById(dto.idVeiculo()).orElseThrow(()->new  IdNaoEncontradoException("ID de veículo não encontrado"));
 
         if(!motoristaVinc.getCategoria().isCompativelCom(veiculoVinc.getTipoVeiculo()))
         {

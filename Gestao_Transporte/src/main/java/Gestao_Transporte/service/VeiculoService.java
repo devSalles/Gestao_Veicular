@@ -26,13 +26,14 @@ public class VeiculoService {
     @Transactional
     public VeiculoResponseDTO salvarVeiculo(VeiculoRequestDTO veiculoRequestDTO)
     {
-        if(veiculoRespoitory.existsByPlaca(veiculoRequestDTO.getPlaca()))
+        String placaFormatada = limparPlaca(veiculoRequestDTO.getPlaca());
+        if(veiculoRespoitory.existsByPlaca(placaFormatada))
         {
             throw new PlacaDuplicadaException();
         }
 
         Veiculo veiculoNew = veiculoRequestDTO.novoVeiculo();
-        veiculoNew.setPlaca(limparPlaca(veiculoRequestDTO.getPlaca()));
+        veiculoNew.setPlaca(placaFormatada);
         veiculoNew.setStatus(StatusVeiculo.DISPONIVEL);
 
         this.veiculoRespoitory.save(veiculoNew);
@@ -68,7 +69,7 @@ public class VeiculoService {
         return veiculos.stream().map(VeiculoResponseDTO::fromVeiculo).toList();
     }
 
-    public Veiculo procurarPorPlaca(String placa)
+    public VeiculoResponseDTO procurarPorPlaca(String placa)
     {
         String placaLimpa = limparPlaca(placa);
 
@@ -77,7 +78,7 @@ public class VeiculoService {
         {
             throw new PlacaInexistenteException();
         }
-        return veiculo;
+        return VeiculoResponseDTO.fromVeiculo(veiculo);
     }
 
     public List<VeiculoResponseStatusDTO> exibirPorStatus(StatusVeiculo statusVeiculo)
