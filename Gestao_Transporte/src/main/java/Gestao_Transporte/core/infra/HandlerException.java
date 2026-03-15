@@ -103,6 +103,13 @@ public class HandlerException {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageRestError);
     }
 
+    @ExceptionHandler(VeiculoNaoVinculadoException.class)
+    public ResponseEntity<MessageRestError> VeiculoNaoVinculadoException(VeiculoNaoVinculadoException ex)
+    {
+        MessageRestError messageRestError = new MessageRestError(HttpStatus.BAD_REQUEST,ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageRestError);
+    }
+
     //--------------------------- EXCEÇÕES DE VEÍCULOS ---------------------------
 
     @ExceptionHandler(PlacaDuplicadaException.class)
