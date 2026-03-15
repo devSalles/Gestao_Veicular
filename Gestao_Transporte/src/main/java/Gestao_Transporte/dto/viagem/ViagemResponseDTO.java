@@ -15,11 +15,14 @@ public record ViagemResponseDTO(
         LocalDateTime dataChegadaPrevista,
         Long atraso,
         Double kmPercorrido,
-        StatusViagem statusViagem
+        StatusViagem statusViagem,
+        Long idMotorista,
+        Long idVeiculo
 
 ) {
     public static ViagemResponseDTO fromViagem(Viagem viagem) {
         return new ViagemResponseDTO(viagem.getId(), viagem.getOrigem(), viagem.getDestino(), viagem.getDataSaida(),
-                viagem.getDataChegadaReal(), viagem.getDataChegadaPrevista(), viagem.getAtraso(), viagem.getKmPercorrido(), viagem.getStatus());
+                viagem.getDataChegadaReal(), viagem.getDataChegadaPrevista(), viagem.getAtraso(), viagem.getKmPercorrido(), viagem.getStatus(),
+                viagem.getMotorista().getId(), viagem.getVeiculo().getId());
     }
 }

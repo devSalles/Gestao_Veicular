@@ -11,7 +11,6 @@ import Gestao_Transporte.core.exception.viagem.ViagemCanceladaException;
 import Gestao_Transporte.core.exception.viagem.ViagemEmAndamentoException;
 import Gestao_Transporte.core.exception.viagem.ViagemJaFinalizadaException;
 import Gestao_Transporte.dto.viagem.AgendarViagemRequestDTO;
-import Gestao_Transporte.dto.viagem.ConsultasViagemResponseDTO;
 import Gestao_Transporte.dto.viagem.ViagemResponseDTO;
 import Gestao_Transporte.entity.Motorista;
 import Gestao_Transporte.entity.Veiculo;
@@ -160,7 +159,7 @@ public class ViagemService {
         return ViagemResponseDTO.fromViagem(viagemID);
     }
 
-    public List<ConsultasViagemResponseDTO> listarTodas()
+    public List<ViagemResponseDTO> listarTodas()
     {
         List<Viagem>viagemList = this.viagemRepository.findAll();
         if(viagemList.isEmpty())
@@ -168,16 +167,16 @@ public class ViagemService {
             throw new NenhumCadastroException("Nenhuma cadastrado de viagem  realizado");
         }
 
-        return viagemList.stream().map(ConsultasViagemResponseDTO::fromViagem).toList();
+        return viagemList.stream().map(ViagemResponseDTO::fromViagem).toList();
     }
 
-    public ConsultasViagemResponseDTO buscarID(Long id)
+    public ViagemResponseDTO buscarID(Long id)
     {
         Viagem viagemID = this.viagemRepository.findById(id).orElseThrow(()->new IdNaoEncontradoException("Viagem não encontrada"));
-        return ConsultasViagemResponseDTO.fromViagem(viagemID);
+        return ViagemResponseDTO.fromViagem(viagemID);
     }
 
-    public List<ConsultasViagemResponseDTO> buscarVeiculo(Long idVeiculo)
+    public List<ViagemResponseDTO> buscarVeiculo(Long idVeiculo)
     {
         List<Viagem> viagens=this.viagemRepository.findByVeiculoId(idVeiculo);
 
@@ -186,10 +185,10 @@ public class ViagemService {
             throw new NenhumCadastroException("ID de veículo não encontrado");
         }
 
-        return viagens.stream().map(ConsultasViagemResponseDTO::fromViagem).toList();
+        return viagens.stream().map(ViagemResponseDTO::fromViagem).toList();
     }
 
-    public List<ConsultasViagemResponseDTO> buscarMotorista(Long idMotorista)
+    public List<ViagemResponseDTO> buscarMotorista(Long idMotorista)
     {
         List<Viagem> viagens=this.viagemRepository.findByMotoristaId(idMotorista);
 
@@ -198,10 +197,10 @@ public class ViagemService {
             throw new NenhumCadastroException("ID de motorista não encontrado");
         }
 
-        return viagens.stream().map(ConsultasViagemResponseDTO::fromViagem).toList();
+        return viagens.stream().map(ViagemResponseDTO::fromViagem).toList();
     }
 
-    public List<ConsultasViagemResponseDTO> consultaPorStatus(StatusViagem statusViagem)
+    public List<ViagemResponseDTO> consultaPorStatus(StatusViagem statusViagem)
     {
         List<Viagem> viagens = this.viagemRepository.findByStatus(statusViagem);
 
@@ -210,10 +209,10 @@ public class ViagemService {
             throw new NenhumCadastroException("Nenhuma viagem cadastrada com esse status");
         }
 
-        return viagens.stream().map(ConsultasViagemResponseDTO::fromViagem).toList();
+        return viagens.stream().map(ViagemResponseDTO::fromViagem).toList();
     }
 
-    public List<ConsultasViagemResponseDTO> consultarDataEntreSaida(LocalDate inicio, LocalDate fim)
+    public List<ViagemResponseDTO> consultarDataEntreSaida(LocalDate inicio, LocalDate fim)
     {
         if(fim.isBefore(inicio))
         {
@@ -230,10 +229,10 @@ public class ViagemService {
             throw new NenhumCadastroException("Nenhum cadastro realizado com essas datas");
         }
 
-        return viagens.stream().map(ConsultasViagemResponseDTO::fromViagem).toList();
+        return viagens.stream().map(ViagemResponseDTO::fromViagem).toList();
     }
 
-    public List<ConsultasViagemResponseDTO> consultarDataEntreChegadaPrevista(LocalDate inicio, LocalDate fim)
+    public List<ViagemResponseDTO> consultarDataEntreChegadaPrevista(LocalDate inicio, LocalDate fim)
     {
         if(fim.isBefore(inicio))
         {
@@ -250,10 +249,10 @@ public class ViagemService {
             throw new NenhumCadastroException("Nenhum cadastro realizado com essas datas");
         }
 
-        return viagens.stream().map(ConsultasViagemResponseDTO::fromViagem).toList();
+        return viagens.stream().map(ViagemResponseDTO::fromViagem).toList();
     }
 
-    public List<ConsultasViagemResponseDTO> consultarDataEntreChegadaReal(LocalDate inicio, LocalDate fim)
+    public List<ViagemResponseDTO> consultarDataEntreChegadaReal(LocalDate inicio, LocalDate fim)
     {
         if(fim.isBefore(inicio))
         {
@@ -270,7 +269,7 @@ public class ViagemService {
             throw new NenhumCadastroException("Nenhum cadastro realizado com essas datas");
         }
 
-        return viagens.stream().map(ConsultasViagemResponseDTO::fromViagem).toList();
+        return viagens.stream().map(ViagemResponseDTO::fromViagem).toList();
     }
 
     @Transactional
