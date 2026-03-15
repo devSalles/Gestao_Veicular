@@ -29,7 +29,4 @@ public interface ViagemRepository extends JpaRepository<Viagem,Long> {
     //Verifica se o veiculo possui viagem ativa ou finalizada
     boolean existsByVeiculoIdAndStatusIn(Long id, List<StatusViagem> statusViagens);
 
-    @Query("SELECT COUNT(v) > 0 FROM Viagem v WHERE v.veiculo.id = :veiculoId AND v.status IN :status")
-    boolean veiculoOcupado(Long veiculoId, List<StatusViagem> status);
-
 }

@@ -7,6 +7,7 @@ import Gestao_Transporte.core.exception.*;
 import Gestao_Transporte.core.exception.motorista.MotoristaIndisponivelException;
 import Gestao_Transporte.core.exception.veiculo.VeiculoIndisponivelException;
 import Gestao_Transporte.core.exception.viagem.KmInvalidoException;
+import Gestao_Transporte.core.exception.viagem.ViagemCanceladaException;
 import Gestao_Transporte.core.exception.viagem.ViagemEmAndamentoException;
 import Gestao_Transporte.core.exception.viagem.ViagemJaFinalizadaException;
 import Gestao_Transporte.dto.viagem.AgendarViagemRequestDTO;
@@ -39,7 +40,7 @@ public class ViagemService {
     @Transactional
     public ViagemResponseDTO agendarViagem(AgendarViagemRequestDTO dto)
     {
-        Motorista motoristaID = this.motoristaRepository.findById(dto.getIdMotorista()).orElseThrow(()->new IdNaoEncontradoException("ID de motorista não encontrado"));
+        Motorista motoristaID = this.motoristaService.buscarID(dto.getIdMotorista());
         Veiculo veiculoID = this.veiculoRespoitory.findById(dto.getIdVeiculo()).orElseThrow(() -> new IdNaoEncontradoException("ID de veículo não encontrado"));
 
         if(dto.getDataSaida().isBefore(LocalDateTime.now()))
@@ -56,11 +57,11 @@ public class ViagemService {
                 List.of(StatusViagem.AGENDADA,StatusViagem.EM_ANDAMENTO));
         if(motoristaOcupado)
         {
-            throw new MotoristaIndisponivelException("Motorista já foi alocado em uma viagem agendada ou já possui uma viagem em andamento");
+            throw new MotoristaIndisponivelException("Motorista já possui uma viagem agendada ou em andamento");
         }
 
-        boolean veiculoIndisponivel = this.viagemRepository.veiculoOcupado(veiculoID.getId(),List.of(StatusViagem.EM_ANDAMENTO,StatusViagem.AGENDADA));
-        if(veiculoIndisponivel)
+        boolean veiculoOcupado = this.viagemRepository.existsByVeiculoIdAndStatusIn(veiculoID.getId(),List.of(StatusViagem.EM_ANDAMENTO,StatusViagem.AGENDADA));
+        if(veiculoOcupado)
         {
             throw new VeiculoIndisponivelException("Veículo Já está em uma viagem ou já possui uma viagem agendada");
         }
@@ -70,6 +71,7 @@ public class ViagemService {
             throw new VeiculoIndisponivelException();
         }
 
+        // Valida se o motorista está ativo e se a CNH é compatível com o veículo
         motoristaService.validarViagens(dto.getIdMotorista(),veiculoID);
 
         Viagem viagem = dto.toViagem(motoristaID,veiculoID);
@@ -144,6 +146,7 @@ public class ViagemService {
             viagemID.setAtraso(atrasoMinutos);
         }
 
+        viagemID.setKmPercorrido(0.0);
         Double totalKm = viagemID.getKmPercorrido()+distanciaPercorrida;
         viagemID.setKmPercorrido(totalKm);
 
@@ -180,7 +183,7 @@ public class ViagemService {
 
         if(viagens.isEmpty())
         {
-            throw new IdNaoEncontradoException("ID de veículo não encontrado");
+            throw new NenhumCadastroException("ID de veículo não encontrado");
         }
 
         return viagens.stream().map(ConsultasViagemResponseDTO::fromViagem).toList();
@@ -192,7 +195,7 @@ public class ViagemService {
 
         if(viagens.isEmpty())
         {
-            throw new IdNaoEncontradoException("ID de motorista não encontrado");
+            throw new NenhumCadastroException("ID de motorista não encontrado");
         }
 
         return viagens.stream().map(ConsultasViagemResponseDTO::fromViagem).toList();
@@ -293,23 +296,23 @@ public class ViagemService {
         return ViagemResponseDTO.fromViagem(viagemID);
     }
 
-    //------------
+    //------------ METODO AUXILIAR ------------
 
     public void validarViagem(Viagem viagem)
     {
-        if(viagem.getStatus() == StatusViagem.FINALIZADA)
+        switch (viagem.getStatus())
         {
-            throw new ViagemJaFinalizadaException();
-        }
+            case AGENDADA:
+                return;
 
-        if(viagem.getStatus() == StatusViagem.EM_ANDAMENTO)
-        {
-            throw new ViagemEmAndamentoException();
-        }
+            case FINALIZADA:
+                throw new ViagemJaFinalizadaException("Viagem finalizada não pode ser iniciada");
 
-        if(viagem.getStatus() != StatusViagem.AGENDADA)
-        {
-            throw new ViagemJaFinalizadaException();
+            case CANCELADA:
+                throw new ViagemCanceladaException();
+
+            case EM_ANDAMENTO:
+                throw new ViagemEmAndamentoException("Viagem em andamento não pode ser iniciada");
         }
     }
 }

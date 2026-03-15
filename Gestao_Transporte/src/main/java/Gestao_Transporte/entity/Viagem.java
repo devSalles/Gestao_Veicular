@@ -37,7 +37,6 @@ public class Viagem {
     @Column
     private LocalDateTime dataChegadaReal;
 
-    @Column(nullable = false)
     private Double kmPercorrido;
 
     @Enumerated(EnumType.STRING)
