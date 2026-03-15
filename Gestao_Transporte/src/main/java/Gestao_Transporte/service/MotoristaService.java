@@ -9,7 +9,6 @@ import Gestao_Transporte.core.exception.viagem.ViagemAtivaOuAgendadaException;
 import Gestao_Transporte.dto.motorista.MotoristaRequestDTO;
 import Gestao_Transporte.dto.motorista.MotoristaResponseDTO;
 import Gestao_Transporte.dto.motorista.MotoristaUpdateDTO;
-import Gestao_Transporte.dto.motorista.VincularMotoristaDTO;
 import Gestao_Transporte.entity.Motorista;
 import Gestao_Transporte.entity.Veiculo;
 import Gestao_Transporte.repository.MotoristaRepository;
@@ -66,10 +65,10 @@ public class MotoristaService {
 
     //Metodo para vincular motorista a um veiculo
     @Transactional
-    public MotoristaResponseDTO vincularVeiculo(VincularMotoristaDTO dto)
+    public MotoristaResponseDTO vincularVeiculo(Long idMotorista ,Long idVeiculo)
     {
-        Motorista motoristaVinc = buscarID(dto.idMotorista());
-        Veiculo veiculoVinc = this.veiculoRespoitory.findById(dto.idVeiculo()).orElseThrow(()->new  IdNaoEncontradoException("ID de veículo não encontrado"));
+        Motorista motoristaVinc = buscarID(idMotorista);
+        Veiculo veiculoVinc = this.veiculoRespoitory.findById(idVeiculo).orElseThrow(()->new  IdNaoEncontradoException("ID de veículo não encontrado"));
 
         if(!motoristaVinc.getCategoria().isCompativelCom(veiculoVinc.getTipoVeiculo()))
         {
@@ -91,6 +90,26 @@ public class MotoristaService {
 
         this.veiculoRespoitory.save(veiculoVinc);
         return MotoristaResponseDTO.fromMotorista(motoristaVinc);
+    }
+
+    @Transactional
+    public MotoristaResponseDTO desvincularVeiculo(Long idVeiculo, Long idMotorista)
+    {
+        Motorista motorista = buscarID(idMotorista);
+        Veiculo veiculo = this.veiculoRespoitory.findById(idVeiculo).orElseThrow(()->new IdNaoEncontradoException("Id de veículo não encontrado"));
+
+        if(!motorista.getVeiculos().contains(veiculo))
+        {
+            throw new VeiculoNaoVinculadoException();
+        }
+
+        motorista.getVeiculos().remove(veiculo);
+        veiculo.getMotoristas().remove(motorista);
+
+        this.motoristaRepository.save(motorista);
+        this.veiculoRespoitory.save(veiculo);
+
+        return MotoristaResponseDTO.fromMotorista(motorista);
     }
 
     public List<MotoristaResponseDTO> listarTodos()

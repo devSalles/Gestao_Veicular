@@ -2,7 +2,6 @@ package Gestao_Transporte.controller;
 
 import Gestao_Transporte.dto.motorista.MotoristaRequestDTO;
 import Gestao_Transporte.dto.motorista.MotoristaUpdateDTO;
-import Gestao_Transporte.dto.motorista.VincularMotoristaDTO;
 import Gestao_Transporte.service.MotoristaService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -24,10 +23,10 @@ public class MotoristaController {
         return ResponseEntity.ok(this.motoristaService.salvarMotorista(motoristaRequestDTO));
     }
 
-    @PostMapping("/vincular-motorista-veiculo")
-    public ResponseEntity<?> vincularMotorista(@Valid @RequestBody VincularMotoristaDTO dto)
+    @PostMapping("/vincular-motorista/{idMotorista}/veiculo/{idVeiculo}")
+    public ResponseEntity<?> vincularMotorista(@PathVariable Long idMotorista, @PathVariable Long idVeiculo)
     {
-        return ResponseEntity.ok(this.motoristaService.vincularVeiculo(dto));
+        return ResponseEntity.ok(this.motoristaService.vincularVeiculo(idMotorista,idVeiculo));
     }
 
     @PutMapping("/atualizar-motorista/{id}")
@@ -52,6 +51,12 @@ public class MotoristaController {
     public ResponseEntity<?> listarCPF(@PathVariable String cpf)
     {
         return ResponseEntity.ok(this.motoristaService.exibirPorCPF(cpf));
+    }
+
+    @DeleteMapping("/desvincular-motorista/{idMotorista}/veiculo/{idVeiculo}")
+    public ResponseEntity<?> desvincularMototrista(@PathVariable Long idMotorista, @PathVariable Long idVeiculo)
+    {
+        return ResponseEntity.ok(this.motoristaService.desvincularVeiculo(idVeiculo,idMotorista));
     }
 
     @DeleteMapping("/excluir/{idMotorista}")
