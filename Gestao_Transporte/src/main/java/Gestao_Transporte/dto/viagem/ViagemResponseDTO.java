@@ -11,8 +11,8 @@ public record ViagemResponseDTO(
         String origem,
         String destino,
         LocalDateTime dataSaida,
-        LocalDateTime dataChegadaPrevista,
         LocalDateTime dataRealChegada,
+        LocalDateTime dataChegadaPrevista,
         Long atraso,
         Double kmPercorrido,
         StatusViagem statusViagem
@@ -20,6 +20,6 @@ public record ViagemResponseDTO(
 ) {
     public static ViagemResponseDTO fromViagem(Viagem viagem) {
         return new ViagemResponseDTO(viagem.getId(), viagem.getOrigem(), viagem.getDestino(), viagem.getDataSaida(),
-                viagem.getDataChegadaReal(), viagem.getDataChegadaPrevista(), viagem.getAtraso(),viagem.getKmPercorrido(), viagem.getStatus());
+                viagem.getDataChegadaReal(), viagem.getDataChegadaPrevista(), viagem.getAtraso(), viagem.getKmPercorrido(), viagem.getStatus());
     }
 }

@@ -17,13 +17,15 @@ public record ConsultasViagemResponseDTO(
         LocalDateTime dataRealChegada,
         Double kmPercorrido,
         StatusViagem statusViagem,
-        MotoristaResponseDTO motoristaResponseDTO,
-        VeiculoResponseDTO veiculoResponseDTO
+
+        MotoristaResponseDTO motorista,
+        VeiculoResponseDTO veiculo
 
 ) {
     public static ConsultasViagemResponseDTO fromViagem(Viagem viagem) {
         return new ConsultasViagemResponseDTO(viagem.getId(), viagem.getOrigem(), viagem.getDestino(), viagem.getDataSaida(),
                 viagem.getDataChegadaReal(), viagem.getDataChegadaPrevista(), viagem.getKmPercorrido(), viagem.getStatus(),
+
                 viagem.getMotorista() != null ? MotoristaResponseDTO.fromMotorista(viagem.getMotorista()) : null,
                 viagem.getVeiculo() != null ? VeiculoResponseDTO.fromVeiculo(viagem.getVeiculo()) : null);
     }
