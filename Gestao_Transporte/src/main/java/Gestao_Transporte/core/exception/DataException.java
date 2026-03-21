@@ -5,6 +5,6 @@ public class DataException extends RuntimeException {
         super(message);
     }
     public DataException() {
-        super("Data final não pode ser anterior a data inicial");
+        super("Datas incorretas passadas");
     }
 }
