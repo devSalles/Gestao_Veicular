@@ -42,7 +42,7 @@ public class MotoristaService {
             throw new CpfRepetidoException();
         }
 
-        Motorista motorista = motoristaRequestDTO.salvarMotorista();
+        Motorista motorista = motoristaRequestDTO.toMotorista();
         motorista.setCpf(cpfFormatado);
         motorista.setStatusMotorista(StatusMotorista.ATIVO);
 

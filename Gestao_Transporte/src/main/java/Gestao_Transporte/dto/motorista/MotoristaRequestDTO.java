@@ -36,7 +36,7 @@ public class MotoristaRequestDTO {
     @Enumerated(EnumType.STRING)
     private CategoriaCNH categoriaCNH;
 
-    public Motorista salvarMotorista()
+    public Motorista toMotorista()
     {
         Motorista motorista = new Motorista();
 
