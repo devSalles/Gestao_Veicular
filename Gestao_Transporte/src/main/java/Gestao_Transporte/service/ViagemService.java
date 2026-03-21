@@ -5,17 +5,14 @@ import Gestao_Transporte.Enum.veiculoEnum.StatusVeiculo;
 import Gestao_Transporte.Enum.StatusViagem;
 import Gestao_Transporte.core.exception.*;
 import Gestao_Transporte.core.exception.motorista.MotoristaIndisponivelException;
+import Gestao_Transporte.core.exception.motorista.VeiculoNaoVinculadoException;
 import Gestao_Transporte.core.exception.veiculo.VeiculoIndisponivelException;
-import Gestao_Transporte.core.exception.viagem.KmInvalidoException;
-import Gestao_Transporte.core.exception.viagem.ViagemCanceladaException;
-import Gestao_Transporte.core.exception.viagem.ViagemEmAndamentoException;
-import Gestao_Transporte.core.exception.viagem.ViagemJaFinalizadaException;
+import Gestao_Transporte.core.exception.viagem.*;
 import Gestao_Transporte.dto.viagem.AgendarViagemRequestDTO;
 import Gestao_Transporte.dto.viagem.ViagemResponseDTO;
 import Gestao_Transporte.entity.Motorista;
 import Gestao_Transporte.entity.Veiculo;
 import Gestao_Transporte.entity.Viagem;
-import Gestao_Transporte.repository.MotoristaRepository;
 import Gestao_Transporte.repository.VeiculoRespoitory;
 import Gestao_Transporte.repository.ViagemRepository;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,13 +23,13 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.function.BiFunction;
 
 @Service
 @RequiredArgsConstructor
 public class ViagemService {
 
     private final ViagemRepository viagemRepository;
-    private final MotoristaRepository motoristaRepository;
     private final VeiculoRespoitory veiculoRespoitory;
     private final MotoristaService motoristaService;
 
@@ -42,15 +39,12 @@ public class ViagemService {
         Motorista motoristaID = this.motoristaService.buscarID(dto.getIdMotorista());
         Veiculo veiculoID = this.veiculoRespoitory.findById(dto.getIdVeiculo()).orElseThrow(() -> new IdNaoEncontradoException("ID de veículo não encontrado"));
 
-        if(dto.getDataSaida().isBefore(LocalDateTime.now()))
+        if(!motoristaID.getVeiculos().contains(veiculoID))
         {
-            throw new DataException("Data de saída não pode ser no passado");
+            throw new VeiculoNaoVinculadoException();
         }
 
-        if(dto.getDataChegadaPrevista().isBefore(dto.getDataSaida()))
-        {
-            throw new DataException("Data de chegada não pode ser anterior que a data de saída");
-        }
+        validarDataHora(dto);
 
         boolean motoristaOcupado = this.viagemRepository.existsByMotoristaIdAndStatusIn(motoristaID.getId(),
                 List.of(StatusViagem.AGENDADA,StatusViagem.EM_ANDAMENTO));
@@ -74,8 +68,6 @@ public class ViagemService {
         motoristaService.validarViagens(dto.getIdMotorista(),veiculoID);
 
         Viagem viagem = dto.toViagem(motoristaID,veiculoID);
-        viagem.setVeiculo(veiculoID);
-        viagem.setMotorista(motoristaID);
         viagem.setStatus(StatusViagem.AGENDADA);
 
         this.viagemRepository.save(viagem);
@@ -87,11 +79,21 @@ public class ViagemService {
     {
         Viagem viagem = this.viagemRepository.findById(idViagem).orElseThrow(()-> new IdNaoEncontradoException("Id de viagem não encontrado"));
 
-        //Metodo responsável por validar viagens
-        validarViagem(viagem);
-
         Motorista motorista = viagem.getMotorista();
         Veiculo veiculo = viagem.getVeiculo();
+
+        if(!motorista.getVeiculos().contains(veiculo))
+        {
+            throw new VeiculoNaoVinculadoException();
+        }
+
+        if(!viagem.getStatus().equals(StatusViagem.AGENDADA))
+        {
+            throw new StatusViagemException("A viagem precisa estar AGENDADA para iniciar");
+        }
+
+        //Metodo responsável por validar viagens
+        validarViagem(viagem);
 
         if(!motorista.getStatusMotorista().equals(StatusMotorista.ATIVO))
         {
@@ -214,62 +216,17 @@ public class ViagemService {
 
     public List<ViagemResponseDTO> consultarDataEntreSaida(LocalDate inicio, LocalDate fim)
     {
-        if(fim.isBefore(inicio))
-        {
-            throw new DataException();
-        }
-
-        LocalDateTime dataInicioFormatada = inicio.atStartOfDay();
-        LocalDateTime dataFinalFormatada = fim.atTime(LocalTime.MAX);
-
-        List<Viagem> viagens = this.viagemRepository.findByDataSaidaBetween(dataInicioFormatada,dataFinalFormatada);
-
-        if(viagens.isEmpty())
-        {
-            throw new NenhumCadastroException("Nenhum cadastro realizado com essas datas");
-        }
-
-        return viagens.stream().map(ViagemResponseDTO::fromViagem).toList();
+        return consultaEntreDatas(inicio,fim,viagemRepository::findByDataSaidaBetween);
     }
 
     public List<ViagemResponseDTO> consultarDataEntreChegadaPrevista(LocalDate inicio, LocalDate fim)
     {
-        if(fim.isBefore(inicio))
-        {
-            throw new DataException();
-        }
-
-        LocalDateTime dataInicioFormatada = inicio.atStartOfDay();
-        LocalDateTime dataFinalFormatada = fim.atTime(LocalTime.MAX);
-
-        List<Viagem> viagens = this.viagemRepository.findByDataChegadaPrevistaBetween(dataInicioFormatada,dataFinalFormatada);
-
-        if(viagens.isEmpty())
-        {
-            throw new NenhumCadastroException("Nenhum cadastro realizado com essas datas");
-        }
-
-        return viagens.stream().map(ViagemResponseDTO::fromViagem).toList();
+        return consultaEntreDatas(inicio,fim,viagemRepository::findByDataChegadaPrevistaBetween);
     }
 
     public List<ViagemResponseDTO> consultarDataEntreChegadaReal(LocalDate inicio, LocalDate fim)
     {
-        if(fim.isBefore(inicio))
-        {
-            throw new DataException();
-        }
-
-        LocalDateTime dataInicioFormatada = inicio.atStartOfDay();
-        LocalDateTime dataFinalFormata = fim.atTime(LocalTime.MAX);
-
-        List<Viagem> viagens = this.viagemRepository.  findByDataChegadaRealBetween(dataInicioFormatada,dataFinalFormata);
-
-        if(viagens.isEmpty())
-        {
-            throw new NenhumCadastroException("Nenhum cadastro realizado com essas datas");
-        }
-
-        return viagens.stream().map(ViagemResponseDTO::fromViagem).toList();
+        return consultaEntreDatas(inicio,fim,viagemRepository::findByDataChegadaRealBetween);
     }
 
     @Transactional
@@ -297,7 +254,7 @@ public class ViagemService {
 
     //------------ METODO AUXILIAR ------------
 
-    public void validarViagem(Viagem viagem)
+    private void validarViagem(Viagem viagem)
     {
         switch (viagem.getStatus())
         {
@@ -311,7 +268,42 @@ public class ViagemService {
                 throw new ViagemCanceladaException();
 
             case EM_ANDAMENTO:
-                throw new ViagemEmAndamentoException("Viagem em andamento não pode ser iniciada");
+                throw new ViagemEmAndamentoException("A viagem já está em andamento");
         }
+    }
+
+    private void validarDataHora(AgendarViagemRequestDTO dto)
+    {
+        if(dto.getDataSaida().isBefore(LocalDateTime.now()))
+        {
+            throw new DataException("Data de saída não pode ser no passado");
+        }
+
+        if(dto.getDataChegadaPrevista().isBefore(dto.getDataSaida()))
+        {
+            throw new DataException("Data de chegada não pode ser anterior que a data de saída");
+        }
+    }
+
+
+    private List<ViagemResponseDTO> consultaEntreDatas(LocalDate inicio, LocalDate fim, BiFunction<LocalDateTime,LocalDateTime,List<Viagem>> consultas)
+    {
+        if(fim.isBefore(inicio))
+        {
+            throw new DataException();
+        }
+
+        LocalDateTime inicioFormatado = inicio.atStartOfDay();
+        LocalDateTime fimFormatado = fim.atTime(LocalTime.MAX);
+
+        //Usado para realizar a consulta e retornar o resultado
+        List<Viagem> viagens = consultas.apply(inicioFormatado,fimFormatado);
+
+        if(viagens.isEmpty())
+        {
+            throw new NenhumCadastroException("Nenhum cadastro realizado com essas datas");
+        }
+
+        return viagens.stream().map(ViagemResponseDTO::fromViagem).toList();
     }
 }

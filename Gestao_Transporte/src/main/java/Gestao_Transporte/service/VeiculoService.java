@@ -7,7 +7,6 @@ import Gestao_Transporte.core.exception.veiculo.*;
 import Gestao_Transporte.core.exception.viagem.ViagemAtivaOuAgendadaException;
 import Gestao_Transporte.dto.veiculo.*;
 import Gestao_Transporte.entity.Veiculo;
-import Gestao_Transporte.repository.MotoristaRepository;
 import Gestao_Transporte.repository.VeiculoRespoitory;
 import Gestao_Transporte.repository.ViagemRepository;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +20,6 @@ public class VeiculoService {
 
     private final VeiculoRespoitory veiculoRespoitory;
     private final ViagemRepository viagemRepository;
-    private final MotoristaRepository motoristaRepository;
 
     @Transactional
     public VeiculoResponseDTO salvarVeiculo(VeiculoRequestDTO veiculoRequestDTO)

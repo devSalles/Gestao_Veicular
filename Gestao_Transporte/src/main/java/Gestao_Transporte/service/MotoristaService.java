@@ -60,7 +60,7 @@ public class MotoristaService {
 
         this.motoristaRepository.save(motoristaAtualizado);
 
-        return MotoristaResponseDTO.fromMotorista(motoristaID);
+        return MotoristaResponseDTO.fromMotorista(motoristaAtualizado);
     }
 
     //Metodo para vincular motorista a um veiculo
