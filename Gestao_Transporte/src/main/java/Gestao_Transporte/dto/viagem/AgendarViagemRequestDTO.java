@@ -4,18 +4,9 @@ import Gestao_Transporte.entity.Motorista;
 import Gestao_Transporte.entity.Veiculo;
 import Gestao_Transporte.entity.Viagem;
 import jakarta.validation.constraints.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 import java.time.LocalDateTime;
 import java.util.HashSet;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
 public record AgendarViagemRequestDTO (
 
     @NotNull(message = "Origem do destino obrigatório") @NotBlank(message = "Origem do destino obrigatório")
