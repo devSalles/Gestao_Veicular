@@ -31,8 +31,8 @@ public class MotoristaService {
     @Transactional
     public MotoristaResponseDTO salvarMotorista(MotoristaRequestDTO motoristaRequestDTO)
     {
-        String cpfFormatado = formatarCPF(motoristaRequestDTO.getCpf());
-        if(this.motoristaRepository.existsByCnh(motoristaRequestDTO.getCnh()))
+        String cpfFormatado = formatarCPF(motoristaRequestDTO.cpf());
+        if(this.motoristaRepository.existsByCnh(motoristaRequestDTO.cnh()))
         {
             throw new CnhRepetidaException();
         }

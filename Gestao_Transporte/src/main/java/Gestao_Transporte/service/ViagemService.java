@@ -36,8 +36,8 @@ public class ViagemService {
     @Transactional
     public ViagemResponseDTO agendarViagem(AgendarViagemRequestDTO dto)
     {
-        Motorista motoristaID = this.motoristaService.buscarID(dto.getIdMotorista());
-        Veiculo veiculoID = this.veiculoRespoitory.findById(dto.getIdVeiculo()).orElseThrow(() -> new IdNaoEncontradoException("ID de veículo não encontrado"));
+        Motorista motoristaID = this.motoristaService.buscarID(dto.idMotorista());
+        Veiculo veiculoID = this.veiculoRespoitory.findById(dto.idVeiculo()).orElseThrow(() -> new IdNaoEncontradoException("ID de veículo não encontrado"));
 
         if(!motoristaID.getVeiculos().contains(veiculoID))
         {
@@ -65,7 +65,7 @@ public class ViagemService {
         }
 
         // Valida se o motorista está ativo e se a CNH é compatível com o veículo
-        motoristaService.validarViagens(dto.getIdMotorista(),veiculoID);
+        motoristaService.validarViagens(dto.idMotorista(),veiculoID);
 
         Viagem viagem = dto.toViagem(motoristaID,veiculoID);
         viagem.setStatus(StatusViagem.AGENDADA);
@@ -274,12 +274,12 @@ public class ViagemService {
 
     private void validarDataHora(AgendarViagemRequestDTO dto)
     {
-        if(dto.getDataSaida().isBefore(LocalDateTime.now()))
+        if(dto.dataSaida().isBefore(LocalDateTime.now()))
         {
             throw new DataException("Data de saída não pode ser no passado");
         }
 
-        if(dto.getDataChegadaPrevista().isBefore(dto.getDataSaida()))
+        if(dto.dataChegadaPrevista().isBefore(dto.dataSaida()))
         {
             throw new DataException("Data de chegada não pode ser anterior que a data de saída");
         }

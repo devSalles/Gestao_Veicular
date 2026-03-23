@@ -24,7 +24,7 @@ public class VeiculoService {
     @Transactional
     public VeiculoResponseDTO salvarVeiculo(VeiculoRequestDTO veiculoRequestDTO)
     {
-        String placaFormatada = limparPlaca(veiculoRequestDTO.getPlaca());
+        String placaFormatada = limparPlaca(veiculoRequestDTO.placa());
         if(veiculoRespoitory.existsByPlaca(placaFormatada))
         {
             throw new PlacaDuplicadaException();
