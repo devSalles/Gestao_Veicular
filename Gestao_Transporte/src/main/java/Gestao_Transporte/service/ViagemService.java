@@ -68,6 +68,8 @@ public class ViagemService {
         motoristaService.validarViagens(dto.idMotorista(),veiculoID);
 
         Viagem viagem = dto.toViagem(motoristaID,veiculoID);
+        viagem.setVeiculo(veiculoID);
+        viagem.setMotorista(motoristaID);
         viagem.setStatus(StatusViagem.AGENDADA);
 
         this.viagemRepository.save(viagem);
