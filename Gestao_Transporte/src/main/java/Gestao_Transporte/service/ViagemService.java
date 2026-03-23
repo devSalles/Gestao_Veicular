@@ -285,7 +285,7 @@ public class ViagemService {
         }
     }
 
-    //Metodo responsável por realizar consulta entre datas 
+    //Metodo responsável por realizar consulta entre datas
     private List<ViagemResponseDTO> consultaEntreDatas(LocalDate inicio, LocalDate fim, BiFunction<LocalDateTime,LocalDateTime,List<Viagem>> consultas)
     {
         if(fim.isBefore(inicio))

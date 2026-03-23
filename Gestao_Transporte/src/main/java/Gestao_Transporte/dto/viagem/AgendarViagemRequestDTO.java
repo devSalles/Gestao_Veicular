@@ -16,26 +16,27 @@ import java.util.HashSet;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AgendarViagemRequestDTO {
+public record AgendarViagemRequestDTO (
 
     @NotNull(message = "Origem do destino obrigatório") @NotBlank(message = "Origem do destino obrigatório")
-    private String origem;
+    String origem,
 
     @NotNull(message = "O destino e obrigatório") @NotBlank(message = "O destino e obrigatório")
-    private String destino;
+    String destino,
 
     @NotNull(message = "A data de saída e obrigatória")
-    private LocalDateTime dataSaida;
+    LocalDateTime dataSaida,
 
     @NotNull(message = "A data de chegada prevista e obrigatória") @FutureOrPresent(message = "A data de chegada prevista deve ser no futuro")
-    private LocalDateTime dataChegadaPrevista;
+    LocalDateTime dataChegadaPrevista,
 
     @NotNull(message = "ID de motorista obrigatório ") @Positive(message = "Valor não permitido")
-    private Long idMotorista;
+    Long idMotorista,
 
     @NotNull(message = "ID de veículo obrigatório ") @Positive(message = "Valor não permitido")
-    private Long idVeiculo;
+    Long idVeiculo
 
+){
     public Viagem toViagem(Motorista motorista, Veiculo veiculo)
     {
         Viagem viagem = new Viagem();
