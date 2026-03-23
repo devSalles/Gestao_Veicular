@@ -164,6 +164,7 @@ Iniciar Viagem (Antes de iniciar uma viagem, cancele a viagem agendada)
 | GET | `/listar-todos` | Lista todos os motoristas |
 | GET | `/exibir-por-id/{id}` | Busca motorista por ID |
 | GET | `/exibir-CPF/{cpf}` | Busca motorista por CPF |
+| DELETE | `/desvincular-motorista/{idMotorista}/veiculo/{idVeiculo}` | Desvinvular motorista |
 | DELETE | `/excluir/{idMotorista}` | Desativa motorista |
 
 ---
