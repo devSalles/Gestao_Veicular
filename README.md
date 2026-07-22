@@ -203,3 +203,33 @@ Iniciar Viagem (Antes de iniciar uma viagem, cancele a viagem agendada)
 }
 ```
 ---
+## 📁 Estrutura do Projeto
+
+```text
+src/
+└── main/
+    ├── java/
+    │   └── Gestao_Transporte/
+    │       ├── controller/
+    │       │
+    │       ├── core/
+    │       │   ├── exception/
+    │       │   └── infra/
+    │       │
+    │       ├── dto/
+    │       │
+    │       ├── entity/
+    │       │
+    │       ├── Enum/
+    │       │   ├── motoristaEnum/
+    │       │   ├── veiculoEnum/
+    │       │   
+    │       │
+    │       ├── repository/
+    │       │
+    │       ├── service/
+    │       │
+    │       └── GestaoTransporteApplication.java
+    │
+    └── resources/
+        └── application.properties
